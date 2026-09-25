@@ -39,7 +39,7 @@
     html[data-theme="dark"] { color-scheme: dark; }
     html, body { background: #f7f7f5; background: light-dark(#f7f7f5, #0d1117); }
   </style>
-  <link rel="stylesheet" href="/assets/style.css?v=43b1c37a01" data-turbo-track="reload">
+  <link rel="stylesheet" href="/assets/style.css?v=743fb6b800" data-turbo-track="reload">
   <!-- Instant client-side navigation (no full reload): Turbo Drive swaps pages in place. Every
        script that sets up a page must also re-run on turbo:load. Paths are root-absolute so the
        tag is identical on every page; otherwise Turbo would treat it as new and run it again. -->
@@ -132,9 +132,9 @@
       requestAnimationFrame(restore);
     })();
   </script>
-  <script src="/assets/notes.js?v=c931aec267" defer data-turbo-track="reload"></script>
+  <script src="/assets/notes.js?v=29699cb114" defer data-turbo-track="reload"></script>
   <script src="/assets/calc.js?v=43068d8bba" defer data-turbo-track="reload"></script>
-  <script src="/assets/flashcards.js?v=302a2e7d9f" defer data-turbo-track="reload"></script>
+  <script src="/assets/flashcards.js?v=e651ffb984" defer data-turbo-track="reload"></script>
 </head>
 <body class="guide">
   <header class="site-header">
@@ -152,33 +152,39 @@
 
     <div class="fc-app">
       <div class="fc-options">
-      <label class="fc-pick">
-        <span>Cards from</span>
-        <select class="fc-section">
-          <option value="">The whole reading (109)</option>
-          <optgroup label="Intro and 2.1">
-          <option value="part-2-1">All of the intro and 2.1 (45)</option>
-          <option value="shanghai">Opening story: Shanghai (7)</option>
-          <option value="s2-1">What population geographers study (4)</option>
-          <option value="density">Population density (6)</option>
-          <option value="physiologic">Physiologic density (6)</option>
-          <option value="distribution">Population distribution (6)</option>
-          <option value="clusters">The four big clusters (11)</option>
-          <option value="data">Reliability of population data (5)</option>
-          </optgroup>
-          <optgroup label="2.2">
-          <option value="part-2-2">All of 2.2 (64)</option>
-          <option value="malthus">Malthus and his critics (7)</option>
-          <option value="natural-increase">Natural increase (14)</option>
-          <option value="india">India (7)</option>
-          <option value="doubling">Doubling time (5)</option>
-          <option value="tfr">Total fertility and aging (10)</option>
-          <option value="pyramids">Population pyramids (5)</option>
-          <option value="religion">Religion and growth (4)</option>
-          <option value="dtm">The demographic transition (12)</option>
-          </optgroup>
-        </select>
-      </label>
+        <label class="fc-pick">
+          <span>Cards from</span>
+          <select class="fc-section">
+            <option value="">The whole reading (109)</option>
+            <optgroup label="Intro and 2.1">
+            <option value="part-2-1">All of the intro and 2.1 (45)</option>
+            <option value="shanghai">Opening story: Shanghai (7)</option>
+            <option value="s2-1">What population geographers study (4)</option>
+            <option value="density">Population density (6)</option>
+            <option value="physiologic">Physiologic density (6)</option>
+            <option value="distribution">Population distribution (6)</option>
+            <option value="clusters">The four big clusters (11)</option>
+            <option value="data">Reliability of population data (5)</option>
+            </optgroup>
+            <optgroup label="2.2">
+            <option value="part-2-2">All of 2.2 (64)</option>
+            <option value="malthus">Malthus and his critics (7)</option>
+            <option value="natural-increase">Natural increase (14)</option>
+            <option value="india">India (7)</option>
+            <option value="doubling">Doubling time (5)</option>
+            <option value="tfr">Total fertility and aging (10)</option>
+            <option value="pyramids">Population pyramids (5)</option>
+            <option value="religion">Religion and growth (4)</option>
+            <option value="dtm">The demographic transition (12)</option>
+            </optgroup>
+          </select>
+        </label>
+        <div class="fc-seg" role="group" aria-label="Focus">
+          <button type="button" data-focus-pick="all" aria-pressed="true">Everything <span class="n">109</span></button>
+          <button type="button" data-focus-pick="ap" aria-pressed="false">AP concepts <span class="n">57</span></button>
+          <button type="button" data-focus-pick="detail" aria-pressed="false">Reading details <span class="n">52</span></button>
+        </div>
+        <p class="fc-focus-note" hidden></p>
         <div class="fc-decks" role="group" aria-label="Which cards">
           <button type="button" class="fc-chip" data-deck="all" aria-pressed="true">All <span class="n">109</span></button>
           <button type="button" class="fc-chip" data-deck="none" aria-pressed="false">Not yet <span class="n"></span></button>
@@ -198,7 +204,7 @@
         <div class="fc-card" role="button" tabindex="0" aria-roledescription="flashcard">
           <div class="fc-flip">
             <div class="fc-face fc-front">
-              <p class="fc-top"><span class="fc-sec">Opening story: Shanghai</span><span class="fc-was"></span></p>
+              <p class="fc-top"><span class="fc-meta"><span class="fc-sec">Opening story: Shanghai</span><span class="fc-kind detail">Reading detail</span></span><span class="fc-was"></span></p>
               <p class="fc-q">How tall is the Shanghai Tower, and what did the author see from the top?</p>
               <p class="fc-hint">Tap to flip</p>
             </div>
@@ -238,31 +244,31 @@
       <section id="shanghai" data-sec="shanghai" data-part="part-2-1" data-title="Opening story: Shanghai">
         <h2>Opening story: Shanghai <span class="pages">pp. 1–3</span></h2>
         <ol>
-        <li class="fc-item" id="sh-tower" data-legacy="c1" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#shanghai">
+        <li class="fc-item" id="sh-tower" data-focus="detail" data-legacy="c1" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#shanghai">
           <p class="q">How tall is the Shanghai Tower, and what did the author see from the top?</p>
           <p class="a">It's 128 stories, over 2,000 ft (600 m) tall. Even on a sunny day the city below was hard to see through the smog.</p>
         </li>
-        <li class="fc-item" id="sh-people" data-legacy="c1" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#shanghai">
+        <li class="fc-item" id="sh-people" data-focus="detail" data-legacy="c1" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#shanghai">
           <p class="q">How many people live in China and in Shanghai, and how many Chinese cities top 1 million?</p>
           <p class="a">China has <strong>1.4 billion</strong> people. Shanghai, the biggest city, has about <strong>22 million</strong>. More than <strong>100</strong> Chinese cities have over 1 million people.</p>
         </li>
-        <li class="fc-item" id="sh-why" data-legacy="c1" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#shanghai">
+        <li class="fc-item" id="sh-why" data-focus="ap" data-legacy="c1" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#shanghai">
           <p class="q">What two things happening at once drove China's rapid urbanization, and what did it cost?</p>
           <p class="a">Economic growth and population growth at the same time. It hurt both the environment and people's health.</p>
         </li>
-        <li class="fc-item" id="sh-pm25" data-legacy="c2" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#shanghai">
+        <li class="fc-item" id="sh-pm25" data-focus="detail" data-legacy="c2" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#shanghai">
           <p class="q">What is PM-2.5, where does China's come from, and why is it so harmful?</p>
           <p class="a">A fine-particle air pollutant released by burning <strong>coal</strong>, China's main fuel. Bigger particles mostly irritate the eyes and throat, but PM-2.5 is small enough to damage the lungs and pass into the bloodstream.</p>
         </li>
-        <li class="fc-item" id="sh-north" data-legacy="c2" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#shanghai">
+        <li class="fc-item" id="sh-north" data-focus="detail" data-legacy="c2" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#shanghai">
           <p class="q">How much shorter are lives in northern China, and why?</p>
           <p class="a">About <strong>5.5 years</strong> shorter than in the south, because the air pollution is worse in the north.</p>
         </li>
-        <li class="fc-item" id="sh-fixes" data-legacy="c3" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#shanghai">
+        <li class="fc-item" id="sh-fixes" data-focus="detail" data-legacy="c3" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#shanghai">
           <p class="q">Name China's three responses to its pollution.</p>
           <p class="a">It limited how much coal can be burned, banned imports of plastics brought in to be burned, and limited the number of cars in major cities.</p>
         </li>
-        <li class="fc-item" id="sh-point" data-legacy="" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#shanghai">
+        <li class="fc-item" id="sh-point" data-focus="detail" data-legacy="" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#shanghai">
           <p class="q">What is the Shanghai story setting up for the chapter?</p>
           <p class="a">The chapter studies population trends at different scales and ties population growth to health, because the two are closely linked everywhere.</p>
         </li>
@@ -271,19 +277,19 @@
       <section id="s2-1" data-sec="s2-1" data-part="part-2-1" data-title="What population geographers study">
         <h2>What population geographers study <span class="pages">pp. 3–4</span></h2>
         <ol>
-        <li class="fc-item" id="in-demog" data-legacy="c4" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#s2-1">
+        <li class="fc-item" id="in-demog" data-focus="ap" data-legacy="c4" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#s2-1">
           <p class="q">What is demography, and how do population geographers use it?</p>
           <p class="a">Demography is the study of overall population trends. Population geographers team up with demographers to explain how and why those trends differ from place to place.</p>
         </li>
-        <li class="fc-item" id="in-scale" data-legacy="c5" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#s2-1">
+        <li class="fc-item" id="in-scale" data-focus="ap" data-legacy="c5" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#s2-1">
           <p class="q">Why does scale matter when you study population? Give the reading's example.</p>
           <p class="a">A pattern you can see at a small scale can disappear at a larger one. People moving from downtown to the suburbs in one city would never show up on a world map.</p>
         </li>
-        <li class="fc-item" id="in-yangon" data-legacy="c6" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#s2-1">
+        <li class="fc-item" id="in-yangon" data-focus="ap" data-legacy="c6" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#s2-1">
           <p class="q">What did the Yangon field note show about crowding and natural hazards?</p>
           <p class="a">When many people live close together in poor places with weak infrastructure, natural hazards hit them much harder.</p>
         </li>
-        <li class="fc-item" id="in-cyclone" data-legacy="c6" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#s2-1">
+        <li class="fc-item" id="in-cyclone" data-focus="detail" data-legacy="c6" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#s2-1">
           <p class="q">What happened near Yangon in 2008?</p>
           <p class="a">A tropical cyclone struck the <strong>Irrawaddy delta</strong> south of Yangon, killing about <strong>100,000</strong> people and leaving millions homeless.</p>
         </li>
@@ -292,27 +298,27 @@
       <section id="density" data-sec="density" data-part="part-2-1" data-title="Population density">
         <h2>Population density <span class="pages">pp. 4–5</span></h2>
         <ol>
-        <li class="fc-item" id="de-def" data-legacy="c7" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#density">
+        <li class="fc-item" id="de-def" data-focus="ap" data-legacy="c7" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#density">
           <p class="q">What is population density, and what does it assume?</p>
           <p class="a">The number of people compared with the amount of land. It assumes everyone is spread out evenly.</p>
         </li>
-        <li class="fc-item" id="de-arith" data-legacy="c8" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#density">
+        <li class="fc-item" id="de-arith" data-focus="ap" data-legacy="c8" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#density">
           <p class="q">What is arithmetic population density? Give the U.S. numbers.</p>
           <p class="a">People divided by <em>all</em> the land. The U.S. has 326 million people on 5,692,815 sq mi (9,161,966 sq km): just over <strong>86 per sq mi</strong> (33 per sq km).</p>
         </li>
-        <li class="fc-item" id="de-three" data-legacy="c9" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#density">
+        <li class="fc-item" id="de-three" data-focus="detail" data-legacy="c9" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#density">
           <p class="q">What are the arithmetic densities of Bangladesh, the Netherlands and Japan?</p>
           <p class="a">Bangladesh <strong>2,962</strong>, the Netherlands <strong>1,068</strong>, Japan <strong>869</strong> people per sq mi.</p>
         </li>
-        <li class="fc-item" id="de-mislead" data-legacy="c10" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#density">
+        <li class="fc-item" id="de-mislead" data-focus="ap" data-legacy="c10" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#density">
           <p class="q">Why can arithmetic density mislead? Give two examples.</p>
           <p class="a">No country's people are really spread evenly. The U.S. average hides how empty Alaska and much of the West are, and Egypt's hides that nearly everyone lives along the Nile.</p>
         </li>
-        <li class="fc-item" id="de-egypt" data-legacy="c11" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#density">
+        <li class="fc-item" id="de-egypt" data-focus="ap" data-legacy="c11" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#density">
           <p class="q">Egypt: population, arithmetic density, area, and where people actually live?</p>
           <p class="a"><strong>97.6 million</strong> people; <strong>252 per sq mi</strong> (97 per sq km); 384,345 sq mi (995,450 sq km), mostly desert. Nearly <strong>98%</strong> live on about <strong>3%</strong> of the land: the Nile valley and delta.</p>
         </li>
-        <li class="fc-item" id="de-luxor" data-legacy="c12" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#density">
+        <li class="fc-item" id="de-luxor" data-focus="detail" data-legacy="c12" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#density">
           <p class="q">What's the takeaway of the Luxor field note?</p>
           <p class="a">Green irrigated fields line the Nile; walk away and it's desert. Where people live and what they do comes from culture, but the physical environment shapes it too.</p>
         </li>
@@ -321,27 +327,27 @@
       <section id="physiologic" data-sec="physiologic" data-part="part-2-1" data-title="Physiologic density">
         <h2>Physiologic density <span class="pages">p. 6</span></h2>
         <ol>
-        <li class="fc-item" id="ph-def" data-legacy="c13" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#physiologic">
+        <li class="fc-item" id="ph-def" data-focus="ap" data-legacy="c13" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#physiologic">
           <p class="q">What is physiologic population density? What is Egypt's?</p>
           <p class="a">People per unit of <strong>arable</strong> (farmable) land. Egypt's is <strong>6,995 per sq mi</strong> (2,701 per sq km), and it keeps rising even as Egypt tries to expand its irrigated farmland.</p>
         </li>
-        <li class="fc-item" id="ph-swiss" data-legacy="c14" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#physiologic">
+        <li class="fc-item" id="ph-swiss" data-focus="detail" data-legacy="c14" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#physiologic">
           <p class="q">Why is Switzerland's physiologic density 10 times its arithmetic density?</p>
           <p class="a">It's mountainous: only 1 acre in 10 is arable.</p>
         </li>
-        <li class="fc-item" id="ph-ukraine" data-legacy="c15" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#physiologic">
+        <li class="fc-item" id="ph-ukraine" data-focus="detail" data-legacy="c15" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#physiologic">
           <p class="q">Ukraine: population and its two densities?</p>
           <p class="a"><strong>44.8 million</strong> people. Arithmetic <strong>192</strong> per sq mi (74 per sq km); physiologic <strong>281</strong> (109 per sq km). Physiologic is 1.46 times arithmetic because 1 of every 1.46 acres is arable.</p>
         </li>
-        <li class="fc-item" id="ph-gap" data-legacy="c16" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#physiologic">
+        <li class="fc-item" id="ph-gap" data-focus="ap" data-legacy="c16" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#physiologic">
           <p class="q">What does the gap between a country's two densities tell you?</p>
           <p class="a">What share of its land is farmable. A big gap means little farmland.</p>
         </li>
-        <li class="fc-item" id="ph-regions" data-legacy="c17" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#physiologic">
+        <li class="fc-item" id="ph-regions" data-focus="detail" data-legacy="c17" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#physiologic">
           <p class="q">Which regions have high and moderate physiologic densities, and where does India stand in South Asia?</p>
           <p class="a">Middle America and the Caribbean: high. South America: moderate. India has the <strong>lowest</strong> physiologic density in South Asia despite its huge population.</p>
         </li>
-        <li class="fc-item" id="ph-indiachina" data-legacy="c17" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#physiologic">
+        <li class="fc-item" id="ph-indiachina" data-focus="detail" data-legacy="c17" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#physiologic">
           <p class="q">China and India both have over 1 billion people. Which has more farmland per person?</p>
           <p class="a">India, by a lot, as physiologic density shows.</p>
         </li>
@@ -350,27 +356,27 @@
       <section id="distribution" data-sec="distribution" data-part="part-2-1" data-title="Population distribution">
         <h2>Population distribution <span class="pages">pp. 6–7</span></h2>
         <ol>
-        <li class="fc-item" id="di-third" data-legacy="c18" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#distribution">
+        <li class="fc-item" id="di-third" data-focus="detail" data-legacy="c18" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#distribution">
           <p class="q">What share of humanity lives in China and India, and where are those countries nearly empty?</p>
           <p class="a"><strong>One-third.</strong> Nearly empty: the Himalayas in India and the desert interior of China.</p>
         </li>
-        <li class="fc-item" id="di-def" data-legacy="c19" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#distribution">
+        <li class="fc-item" id="di-def" data-focus="ap" data-legacy="c19" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#distribution">
           <p class="q">What is population distribution? What do clustered and dispersed mean?</p>
           <p class="a">The pattern people make across space. <strong>Clustered</strong>: many people close together. <strong>Dispersed</strong>: few people, spread out.</p>
         </li>
-        <li class="fc-item" id="di-food" data-legacy="c20" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#distribution">
+        <li class="fc-item" id="di-food" data-focus="ap" data-legacy="c20" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#distribution">
           <p class="q">How has the link between farmland and where people live changed?</p>
           <p class="a">For most of history people lived where they could grow food, and cities started in farming areas. Better farm technology and easier shipping of food loosened that link: people now crowd into cities and thin out in the countryside.</p>
         </li>
-        <li class="fc-item" id="di-dot" data-legacy="c21" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#distribution">
+        <li class="fc-item" id="di-dot" data-focus="ap" data-legacy="c21" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#distribution">
           <p class="q">What is a dot map, and what does one dot stand for on Fig. 2.4?</p>
           <p class="a">Each dot stands for a set number of people; on Fig. 2.4, <strong>1 dot = 100,000 people</strong>. At a local scale a dot can mark a single farm; at the global scale the picture is much more generalized.</p>
         </li>
-        <li class="fc-item" id="di-dasy" data-legacy="c21" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#east-asia">
+        <li class="fc-item" id="di-dasy" data-focus="detail" data-legacy="c21" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#east-asia">
           <p class="q">What is a dasymetric map (Fig. 2.5)?</p>
           <p class="a">A map that uses landscape, land cover and topography to estimate where people actually cluster and where they're sparse, instead of spreading them evenly.</p>
         </li>
-        <li class="fc-item" id="di-rank" data-legacy="c22" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#distribution">
+        <li class="fc-item" id="di-rank" data-focus="ap" data-legacy="c22" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#distribution">
           <p class="q">Rank the world's four biggest population clusters.</p>
           <p class="a">1. East Asia, 2. South Asia, 3. Europe, 4. North America.</p>
         </li>
@@ -379,47 +385,47 @@
       <section id="clusters" data-sec="clusters" data-part="part-2-1" data-title="The four big clusters">
         <h2>The four big clusters <span class="pages">pp. 8–11</span></h2>
         <ol>
-        <li class="fc-item" id="cl-ea" data-legacy="c23" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#east-asia">
+        <li class="fc-item" id="cl-ea" data-focus="ap" data-legacy="c23" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#east-asia">
           <p class="q">East Asia: which countries, what share of the world, and where do people concentrate?</p>
           <p class="a">Mostly China, plus Korea and Japan: almost <strong>¼</strong> of the world's people, 1.4 billion in China alone. Besides the big cities, dense "ribbons" follow the <strong>Huang He</strong> and <strong>Yangtze</strong> valleys, where farmers grow wheat and rice for themselves and for cities like Shanghai and Beijing.</p>
         </li>
-        <li class="fc-item" id="cl-sa" data-legacy="c24" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#south-asia">
+        <li class="fc-item" id="cl-sa" data-focus="ap" data-legacy="c24" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#south-asia">
           <p class="q">South Asia: how many people, which countries, and which river basins?</p>
           <p class="a"><strong>1.5 billion.</strong> India is the core, plus Pakistan, Bangladesh and Sri Lanka. People crowd into big cities, coasts and the <strong>Ganges, Indus and Brahmaputra</strong> basins.</p>
         </li>
-        <li class="fc-item" id="cl-sa-walls" data-legacy="c24" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#south-asia">
+        <li class="fc-item" id="cl-sa-walls" data-focus="ap" data-legacy="c24" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#south-asia">
           <p class="q">What physical barriers hem in South Asia's cluster?</p>
           <p class="a">The Himalayas to the north, the mountains of Afghanistan and Pakistan to the west, and the Indian Ocean to the south and east.</p>
         </li>
-        <li class="fc-item" id="cl-sa-growth" data-legacy="c25" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#south-asia">
+        <li class="fc-item" id="cl-sa-growth" data-focus="detail" data-legacy="c25" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#south-asia">
           <p class="q">India's vs. China's growth rate, and what was predicted for India by 2030?</p>
           <p class="a">India <strong>1.17</strong> vs. China <strong>0.56</strong>. India was predicted to be the most populous country by 2030, home to <strong>1 of every 6</strong> people.</p>
         </li>
-        <li class="fc-item" id="cl-bang" data-legacy="c26" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#south-asia">
+        <li class="fc-item" id="cl-bang" data-focus="detail" data-legacy="c26" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#south-asia">
           <p class="q">Compare rural Bangladesh with Iowa.</p>
           <p class="a">Bangladesh fits over <strong>156 million</strong> people, nearly all small farmers, into an Iowa-sized area, with <strong>3,000–5,000</strong> per sq mi in much of the countryside. Iowa (2017): about 3.15 million people, rural density <strong>55</strong>.</p>
         </li>
-        <li class="fc-item" id="cl-eu" data-legacy="c27" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#europe">
+        <li class="fc-item" id="cl-eu" data-focus="ap" data-legacy="c27" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#europe">
           <p class="q">Europe: how many people, and why doesn't terrain predict where they live as well as in Asia?</p>
           <p class="a">Over <strong>725 million</strong>, less than half of South Asia. Europe is crowded even in mountains, because the Industrial Revolution and the second urban revolution began there, so it industrialized and urbanized before Asia.</p>
         </li>
-        <li class="fc-item" id="cl-eu-cities" data-legacy="c27" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#europe">
+        <li class="fc-item" id="cl-eu-cities" data-focus="detail" data-legacy="c27" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#europe">
           <p class="q">Where did Europe's cities grow, and how urban are Germany, the UK and France?</p>
           <p class="a">In the industrial zones of the 1800s and 1900s: northern France, western Germany, northern Italy and east into Russia. Urban shares: Germany <strong>77%</strong>, UK <strong>83%</strong>, France <strong>80%</strong>. Its countryside is emptier than rural Asia's.</p>
         </li>
-        <li class="fc-item" id="cl-big3" data-legacy="c28" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#europe">
+        <li class="fc-item" id="cl-big3" data-focus="detail" data-legacy="c28" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#europe">
           <p class="q">How many people live in the three biggest clusters combined, and what comparison makes the point?</p>
           <p class="a">About <strong>4 billion</strong> of the world's 7.7 billion. No other cluster is even half the size of any of them; South America and Africa together barely outnumber India.</p>
         </li>
-        <li class="fc-item" id="cl-mega" data-legacy="c29" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#north-america">
+        <li class="fc-item" id="cl-mega" data-focus="ap" data-legacy="c29" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#north-america">
           <p class="q">What is a megalopolis, and where is North America's?</p>
           <p class="a">A giant continuous urban region where one city runs into the next. U.S.: <strong>Boston to Washington, D.C.</strong> Canada: <strong>Quebec City</strong> through Montreal, Ottawa and Toronto to <strong>Windsor</strong>.</p>
         </li>
-        <li class="fc-item" id="cl-mega-nums" data-legacy="c29" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#north-america">
+        <li class="fc-item" id="cl-mega-nums" data-focus="detail" data-legacy="c29" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#north-america">
           <p class="q">Give the megalopolis numbers.</p>
           <p class="a">Over <strong>70 million</strong> people. Half of Canada lives in the Quebec City–Windsor corridor, about <strong>20%</strong> of Americans in Boston–Washington, and the combined cluster is about <strong>¼</strong> the size of Europe's.</p>
         </li>
-        <li class="fc-item" id="cl-cities" data-legacy="c30" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#north-america">
+        <li class="fc-item" id="cl-cities" data-focus="detail" data-legacy="c30" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#north-america">
           <p class="q">Rank New York City, Mumbai and Dhaka by density.</p>
           <p class="a">Dhaka <strong>122,700</strong>, Mumbai <strong>68,400</strong>, New York City <strong>28,717</strong> people per sq mi.</p>
         </li>
@@ -428,23 +434,23 @@
       <section id="data" data-sec="data" data-part="part-2-1" data-title="Reliability of population data">
         <h2>Reliability of population data <span class="pages">pp. 11–12</span></h2>
         <ol>
-        <li class="fc-item" id="da-census" data-legacy="c31" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#data">
+        <li class="fc-item" id="da-census" data-focus="ap" data-legacy="c31" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#data">
           <p class="q">How often does the U.S. take a census, and why do states and cities want everyone counted?</p>
           <p class="a">Every <strong>10 years</strong>. Much federal funding is handed out by population, and each state's seats in Congress depend on the count, so an undercount costs money and representation.</p>
         </li>
-        <li class="fc-item" id="da-missed" data-legacy="c31" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#data">
+        <li class="fc-item" id="da-missed" data-focus="ap" data-legacy="c31" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#data">
           <p class="q">Which groups are least likely to be counted?</p>
           <p class="a">Migrants, racial minorities, families who double up in rentals or have no home, and low-income families.</p>
         </li>
-        <li class="fc-item" id="da-sampling" data-legacy="c32" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#data">
+        <li class="fc-item" id="da-sampling" data-focus="detail" data-legacy="c32" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#data">
           <p class="q">What is the sampling debate?</p>
           <p class="a">Advocacy groups want the Census Bureau to sample the population and calculate totals statistically, which they say is more accurate. The Bureau sticks to trying to count every person.</p>
         </li>
-        <li class="fc-item" id="da-citizen" data-legacy="c32" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#data">
+        <li class="fc-item" id="da-citizen" data-focus="detail" data-legacy="c32" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#data">
           <p class="q">What is the citizenship-question debate?</p>
           <p class="a">Supporters want the census to separate citizens from unauthorized immigrants. Opponents say the question would scare people off and make the count inaccurate.</p>
         </li>
-        <li class="fc-item" id="da-orgs" data-legacy="c33" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#data">
+        <li class="fc-item" id="da-orgs" data-focus="detail" data-legacy="c33" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#data">
           <p class="q">Which three organizations collect population data by country, and what's the catch?</p>
           <p class="a">The <strong>United Nations</strong>, the <strong>World Bank</strong> and the <strong>Population Reference Bureau</strong>. Their numbers don't always match: many figures are informed estimates, not counts.</p>
         </li>
@@ -453,31 +459,31 @@
       <section id="malthus" data-sec="malthus" data-part="part-2-2" data-title="Malthus and his critics">
         <h2>Malthus and his critics <span class="pages">pp. 12–13</span></h2>
         <ol>
-        <li class="fc-item" id="ma-ehrlich" data-legacy="d1" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#s2-2">
+        <li class="fc-item" id="ma-ehrlich" data-focus="detail" data-legacy="d1" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#s2-2">
           <p class="q">Who wrote <em>The Population Bomb</em>, when, and what did it argue?</p>
           <p class="a"><strong>Paul Ehrlich</strong>, in the late 1960s: population was growing faster than food production.</p>
         </li>
-        <li class="fc-item" id="ma-claim" data-legacy="d2" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#malthus">
+        <li class="fc-item" id="ma-claim" data-focus="ap" data-legacy="d2" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#malthus">
           <p class="q">What did Malthus argue in 1798, and what were his two kinds of growth?</p>
           <p class="a">In <em>An Essay on the Principles of Population</em>, that population was outrunning the food supply. Food grows <strong>linearly</strong>; population grows <strong>exponentially</strong>.</p>
         </li>
-        <li class="fc-item" id="ma-assume" data-legacy="d2" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#malthus">
+        <li class="fc-item" id="ma-assume" data-focus="detail" data-legacy="d2" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#malthus">
           <p class="q">What did Malthus assume, and how long did he keep revising the essay?</p>
           <p class="a">That what a country eats depends on what it grows. He revised it from <strong>1803 to 1826</strong>.</p>
         </li>
-        <li class="fc-item" id="ma-wrong" data-legacy="d3" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#malthus">
+        <li class="fc-item" id="ma-wrong" data-focus="ap" data-legacy="d3" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#malthus">
           <p class="q">Why was Malthus wrong (so far)?</p>
           <p class="a">Countries aren't closed systems: he didn't foresee globalization and worldwide trade in food. Mercantilism, colonialism and capitalism connected the continents and spread farming methods, crops and livestock.</p>
         </li>
-        <li class="fc-item" id="ma-examples" data-legacy="d3" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#malthus">
+        <li class="fc-item" id="ma-examples" data-focus="detail" data-legacy="d3" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#malthus">
           <p class="q">Give the reading's two examples of food crossing borders.</p>
           <p class="a">The <strong>potato</strong> came from South America; Irish farmers only started growing it in the 1700s. <strong>Norway</strong> has just 2% arable land but imports most of its food.</p>
         </li>
-        <li class="fc-item" id="ma-yields" data-legacy="d4" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#malthus">
+        <li class="fc-item" id="ma-yields" data-focus="ap" data-legacy="d4" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#malthus">
           <p class="q">What made food production explode?</p>
           <p class="a">More land farmed; better seeds, pesticides, fertilizers and irrigation; and in the 2000s bioengineering: new hybrids, GMOs and new fertilizers.</p>
         </li>
-        <li class="fc-item" id="ma-neo" data-legacy="d5" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#malthus">
+        <li class="fc-item" id="ma-neo" data-focus="ap" data-legacy="d5" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#malthus">
           <p class="q">Who are the neo-Malthusians, and what do they argue?</p>
           <p class="a">They revive Malthus but focus on <strong>population growth</strong> more than food. They say overpopulation will cause suffering and growth will hit the limits of food, energy and water. Farming's environmental costs back up their doubts.</p>
         </li>
@@ -486,59 +492,59 @@
       <section id="natural-increase" data-sec="natural-increase" data-part="part-2-2" data-title="Natural increase">
         <h2>Natural increase <span class="pages">pp. 13–16</span></h2>
         <ol>
-        <li class="fc-item" id="ni-rates" data-legacy="d6" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
+        <li class="fc-item" id="ni-rates" data-focus="ap" data-legacy="d6" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
           <p class="q">What are the crude birth rate and crude death rate?</p>
           <p class="a">CBR: live births per year for every 1,000 people. CDR: deaths per year for every 1,000 people.</p>
         </li>
-        <li class="fc-item" id="ni-formula" data-legacy="d6" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
+        <li class="fc-item" id="ni-formula" data-focus="ap" data-legacy="d6" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
           <p class="q">How do you get the natural increase rate, and what does it leave out?</p>
           <p class="a"><strong>CBR − CDR</strong> (divide by 10 for a percent). It leaves out migration: immigration and emigration.</p>
         </li>
-        <li class="fc-item" id="ni-negative" data-legacy="d6" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
+        <li class="fc-item" id="ni-negative" data-focus="ap" data-legacy="d6" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
           <p class="q">Which places have negative natural increase?</p>
           <p class="a"><strong>Europe and Russia.</strong> Without immigration they'd be shrinking.</p>
         </li>
-        <li class="fc-item" id="ni-soviet" data-legacy="d7" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
+        <li class="fc-item" id="ni-soviet" data-focus="detail" data-legacy="d7" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
           <p class="q">What happened to growth in the Soviet Union?</p>
           <p class="a">It grew fast in the mid-1900s, then growth dropped sharply after the breakup in <strong>1991</strong>.</p>
         </li>
-        <li class="fc-item" id="ni-india-africa" data-legacy="d7" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
+        <li class="fc-item" id="ni-india-africa" data-focus="detail" data-legacy="d7" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
           <p class="q">How have India's and Africa's growth rates changed places?</p>
           <p class="a">Around 1990 India grew at almost 3%, faster than most African countries. Now Africa grows <strong>2.43%</strong> vs. India's <strong>1.17%</strong>.</p>
         </li>
-        <li class="fc-item" id="ni-hiv" data-legacy="d7" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
+        <li class="fc-item" id="ni-hiv" data-focus="ap" data-legacy="d7" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
           <p class="q">How has HIV/AIDS affected parts of sub-Saharan Africa?</p>
           <p class="a">It killed millions, orphaned children, cut life expectancy and held down growth.</p>
         </li>
-        <li class="fc-item" id="ni-muslim" data-legacy="d8" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
+        <li class="fc-item" id="ni-muslim" data-focus="detail" data-legacy="d8" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
           <p class="q">Which Muslim countries still grow fast, and which have dropped sharply?</p>
           <p class="a">Sudan <strong>2.55%</strong>, Yemen <strong>2.52%</strong>, Afghanistan <strong>2.65%</strong>, the Palestinian territories <strong>2.83%</strong>. Iran, Oman and Morocco have dropped sharply.</p>
         </li>
-        <li class="fc-item" id="ni-women" data-legacy="d9" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
+        <li class="fc-item" id="ni-women" data-focus="ap" data-legacy="d9" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
           <p class="q">What social pattern goes with high natural increase?</p>
           <p class="a">Custom that limits women's education and careers, with men running family life.</p>
         </li>
-        <li class="fc-item" id="ni-asia" data-legacy="d10" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
+        <li class="fc-item" id="ni-asia" data-focus="detail" data-legacy="d10" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
           <p class="q">Describe growth across Asia.</p>
           <p class="a">India: slightly below the world average but above China. China: well below. Japan: shrinking. Southeast Asia: faster but far fewer people; Indonesia and Vietnam slowing, Thailand negative.</p>
         </li>
-        <li class="fc-item" id="ni-samerica" data-legacy="d11" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
+        <li class="fc-item" id="ni-samerica" data-focus="detail" data-legacy="d11" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
           <p class="q">Describe growth in South America.</p>
           <p class="a">A little over 1% for the region. Brazil fell from <strong>2.9%</strong> (mid-1960s) to <strong>0.8%</strong>. Argentina, Chile and Uruguay are well below the world average.</p>
         </li>
-        <li class="fc-item" id="ni-core" data-legacy="d12" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
+        <li class="fc-item" id="ni-core" data-focus="ap" data-legacy="d12" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
           <p class="q">Where are growth rates lowest?</p>
           <p class="a">The <strong>global economic core</strong>: the U.S., Canada, Europe and Japan, plus Australia and Uruguay.</p>
         </li>
-        <li class="fc-item" id="ni-russia" data-legacy="d13" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
+        <li class="fc-item" id="ni-russia" data-focus="detail" data-legacy="d13" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
           <p class="q">Why did Russia shrink after 1991, and where is it now?</p>
           <p class="a">Worsening health, alcoholism and drug use, more male suicides and economic trouble. The economy has improved but the birth rate is still low. Ukraine also has negative growth.</p>
         </li>
-        <li class="fc-item" id="ni-world" data-legacy="d14" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
+        <li class="fc-item" id="ni-world" data-focus="detail" data-legacy="d14" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
           <p class="q">World population in 1900, 2000 and 2019, and life expectancy then and now?</p>
           <p class="a"><strong>1.6 billion</strong> → <strong>6.1 billion</strong> → over <strong>7.7 billion</strong>. Life expectancy rose from <strong>30</strong> (1900) to <strong>72</strong> (2016).</p>
         </li>
-        <li class="fc-item" id="ni-leveloff" data-legacy="d14" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
+        <li class="fc-item" id="ni-leveloff" data-focus="detail" data-legacy="d14" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#natural-increase">
           <p class="q">When and at what number do demographers expect world population to level off?</p>
           <p class="a">At <strong>10 to 11 billion</strong>, sometime between 2050 and 2100.</p>
         </li>
@@ -547,31 +553,31 @@
       <section id="india" data-sec="india" data-part="part-2-2" data-title="India">
         <h2>India <span class="pages">pp. 17–20</span></h2>
         <ol>
-        <li class="fc-item" id="in-states" data-legacy="d15" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#india">
+        <li class="fc-item" id="in-states" data-focus="detail" data-legacy="d15" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#india">
           <p class="q">How is India divided, and which parts grow fastest?</p>
           <p class="a"><strong>29 states and 7 union territories.</strong> Northern states grow far faster than average; southern and western states much more slowly.</p>
         </li>
-        <li class="fc-item" id="in-why" data-legacy="d15" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#india">
+        <li class="fc-item" id="in-why" data-focus="ap" data-legacy="d15" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#india">
           <p class="q">Why do India's south and west grow more slowly?</p>
           <p class="a">Women there have higher literacy, more land ownership, better health care and more access to birth control.</p>
         </li>
-        <li class="fc-item" id="in-1952" data-legacy="d16" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#india">
+        <li class="fc-item" id="in-1952" data-focus="detail" data-legacy="d16" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#india">
           <p class="q">What was India's 1952 first?</p>
           <p class="a">It became the <strong>first country</strong> in the world with a population planning program.</p>
         </li>
-        <li class="fc-item" id="in-1976" data-legacy="d16" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#india">
+        <li class="fc-item" id="in-1976" data-focus="ap" data-legacy="d16" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#india">
           <p class="q">What happened in 1976?</p>
           <p class="a">A mass drive to forcibly sterilize men with <strong>3 or more children</strong>. Officials with quotas brought in childless men. <strong>Maharashtra</strong> sterilized <strong>3.7 million</strong> people before riots ended it; <strong>6 million</strong> men in all.</p>
         </li>
-        <li class="fc-item" id="in-after" data-legacy="d17" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#india">
+        <li class="fc-item" id="in-after" data-focus="ap" data-legacy="d17" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#india">
           <p class="q">How did India's policy change after the protests?</p>
           <p class="a">Forced sterilization ended. The national government sets goals and each state sets its own policy (Maharashtra pays newlyweds to wait 2 years before a first child). The focus moved to birth control for women: injectables nationwide, small-family posters and clinics in remote villages.</p>
         </li>
-        <li class="fc-item" id="in-cpr" data-legacy="d18" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#india">
+        <li class="fc-item" id="in-cpr" data-focus="detail" data-legacy="d18" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#india">
           <p class="q">What is the contraceptive prevalence rate? Give India's and the extremes.</p>
           <p class="a">The % of women ages 15–49 using at least one birth control method (or whose partner is). India <strong>55.1%</strong>. Highest: Andhra Pradesh 69.8, Maharashtra 63.5. Lowest: Bihar 26.0, Meghalaya 21.1.</p>
         </li>
-        <li class="fc-item" id="in-lesson" data-legacy="d15" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#india">
+        <li class="fc-item" id="in-lesson" data-focus="ap" data-legacy="d15" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#india">
           <p class="q">What's the lesson of the India case?</p>
           <p class="a">A world map is only an introduction: the global scale hides what's happening inside each country.</p>
         </li>
@@ -580,23 +586,23 @@
       <section id="doubling" data-sec="doubling" data-part="part-2-2" data-title="Doubling time">
         <h2>Doubling time <span class="pages">pp. 21–22</span></h2>
         <ol>
-        <li class="fc-item" id="do-def" data-legacy="d19" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#doubling">
+        <li class="fc-item" id="do-def" data-focus="ap" data-legacy="d19" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#doubling">
           <p class="q">What is doubling time? Use the money example.</p>
           <p class="a">How long a population takes to double at its current growth rate. $100 at 10% becomes $200 in about <strong>7 years</strong>, $400 in 14, $800 in 21.</p>
         </li>
-        <li class="fc-item" id="do-steps" data-legacy="d20" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#doubling">
+        <li class="fc-item" id="do-steps" data-focus="detail" data-legacy="d20" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#doubling">
           <p class="q">Give the world population milestones from 2,000 years ago to 1975.</p>
           <p class="a">About 250 million (2,000 years ago) → <strong>500 million</strong> (1650, after 16+ centuries) → <strong>1 billion</strong> (1820) → <strong>2 billion</strong> (1930) → <strong>4 billion</strong> (1975, only 45 years later).</p>
         </li>
-        <li class="fc-item" id="do-low" data-legacy="d20" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#doubling">
+        <li class="fc-item" id="do-low" data-focus="detail" data-legacy="d20" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#doubling">
           <p class="q">When was doubling time shortest, and what is it now?</p>
           <p class="a">A low of <strong>39 years</strong> in the mid-1980s. Policies like China's one-child rule stretched it to <strong>54 years</strong>.</p>
         </li>
-        <li class="fc-item" id="do-less" data-legacy="d21" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#doubling">
+        <li class="fc-item" id="do-less" data-focus="detail" data-legacy="d21" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#doubling">
           <p class="q">Why does doubling time matter less to demographers now?</p>
           <p class="a">Populations are falling in many places, and the lengthening doubling time signals a slowdown this century.</p>
         </li>
-        <li class="fc-item" id="do-factors" data-legacy="d21" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#doubling">
+        <li class="fc-item" id="do-factors" data-focus="ap" data-legacy="d21" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#doubling">
           <p class="q">What explains the differences in growth, and how does urbanization fit in?</p>
           <p class="a">No single factor: prosperity and social upheaval can both cut growth. Wealth brings urbanization, education, later marriage and family planning. The more urbanized a population, the <strong>lower</strong> its natural increase.</p>
         </li>
@@ -605,43 +611,43 @@
       <section id="tfr" data-sec="tfr" data-part="part-2-2" data-title="Total fertility and aging">
         <h2>Total fertility and aging <span class="pages">pp. 22–25</span></h2>
         <ol>
-        <li class="fc-item" id="tf-def" data-legacy="d22" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#tfr">
+        <li class="fc-item" id="tf-def" data-focus="ap" data-legacy="d22" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#tfr">
           <p class="q">What is the total fertility rate, and what is replacement level?</p>
           <p class="a">The average number of children born to women ages 15–49. <strong>2.1</strong> replaces a population without immigration.</p>
         </li>
-        <li class="fc-item" id="tf-below" data-legacy="d22" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#tfr">
+        <li class="fc-item" id="tf-below" data-focus="detail" data-legacy="d22" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#tfr">
           <p class="q">How many countries are below replacement?</p>
           <p class="a">More than <strong>95</strong> countries, home to <strong>41%</strong> of the world's people.</p>
         </li>
-        <li class="fc-item" id="tf-range" data-legacy="d23" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#tfr">
+        <li class="fc-item" id="tf-range" data-focus="detail" data-legacy="d23" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#tfr">
           <p class="q">What does the UN predict for world TFR, and what was the 2016 range?</p>
           <p class="a">Below <strong>2.2 by 2050</strong>. In 2016 the world was <strong>2.4</strong>, from <strong>1.2</strong> in South Korea to <strong>7.2</strong> in Niger.</p>
         </li>
-        <li class="fc-item" id="tf-oadr" data-legacy="d24" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#tfr">
+        <li class="fc-item" id="tf-oadr" data-focus="ap" data-legacy="d24" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#tfr">
           <p class="q">What is the old-age dependency ratio? Compare Europe and sub-Saharan Africa.</p>
           <p class="a">People over 65 compared with working-age people (15–64). Europe <strong>29.9</strong>, heading to <strong>47</strong> by 2050; sub-Saharan Africa <strong>5.7</strong>. Africa's problem is the child dependency ratio: <strong>74</strong> vs. Europe's 23.</p>
         </li>
-        <li class="fc-item" id="tf-aging" data-legacy="d25" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#tfr">
+        <li class="fc-item" id="tf-aging" data-focus="ap" data-legacy="d25" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#tfr">
           <p class="q">Why is an aging population a problem, and what are the two fixes?</p>
           <p class="a">Retirees need pensions and medical care, paid for by fewer and fewer young taxpayers. Fixes: raise the TFR, or allow immigration (immigrants tend to be young, taxpaying workers).</p>
         </li>
-        <li class="fc-item" id="tf-japan" data-legacy="d26" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#tfr">
+        <li class="fc-item" id="tf-japan" data-focus="ap" data-legacy="d26" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#tfr">
           <p class="q">Japan: population numbers and its stance on immigration?</p>
           <p class="a">Peak <strong>128.06 million</strong> (2008) → <strong>126.8 million</strong> (2017) → about <strong>100 million</strong> by 2050, a 20% loss. It still discourages immigration; over 98% of people are ethnically Japanese.</p>
         </li>
-        <li class="fc-item" id="tf-drops" data-legacy="d27" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#tfr">
+        <li class="fc-item" id="tf-drops" data-focus="detail" data-legacy="d27" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#tfr">
           <p class="q">Give the TFR drops for Kenya, China and Iran.</p>
           <p class="a">Kenya: <strong>3.85</strong> (2016). China: 6.1 → 1.75 in 35 years, 1.5 in 2010, 1.62 in 2016. Iran: 6.8 (1980) → 1.7 (2016) once family planning was allowed.</p>
         </li>
-        <li class="fc-item" id="tf-why" data-legacy="d27" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#tfr">
+        <li class="fc-item" id="tf-why" data-focus="ap" data-legacy="d27" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#tfr">
           <p class="q">Why are TFRs falling almost everywhere?</p>
           <p class="a">Mostly family planning, pushed by government and NGO programs. Some women also choose fewer children because of economic and social uncertainty.</p>
         </li>
-        <li class="fc-item" id="tf-incentives" data-legacy="d28" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#tfr">
+        <li class="fc-item" id="tf-incentives" data-focus="ap" data-legacy="d28" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#tfr">
           <p class="q">How are some governments fighting low birth rates, and has it worked?</p>
           <p class="a">Sweden, Russia and other European countries offer long maternity leave and state-paid daycare; Japan runs campaigns urging men to do more housework. Only <strong>limited success</strong>.</p>
         </li>
-        <li class="fc-item" id="tf-still" data-legacy="d29" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#tfr">
+        <li class="fc-item" id="tf-still" data-focus="detail" data-legacy="d29" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#tfr">
           <p class="q">Why is world population still growing?</p>
           <p class="a">World TFR was <strong>2.43</strong> in 2016, above replacement, and India, Indonesia, Bangladesh, Pakistan and Nigeria are still adding lots of people.</p>
         </li>
@@ -650,23 +656,23 @@
       <section id="pyramids" data-sec="pyramids" data-part="part-2-2" data-title="Population pyramids">
         <h2>Population pyramids <span class="pages">pp. 25–28</span></h2>
         <ol>
-        <li class="fc-item" id="py-def" data-legacy="d30" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#pyramids">
+        <li class="fc-item" id="py-def" data-focus="ap" data-legacy="d30" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#pyramids">
           <p class="q">What are population composition and a population pyramid?</p>
           <p class="a">Composition: a population's makeup by age, sex and traits like marital status and education. A pyramid graphs its age and sex structure.</p>
         </li>
-        <li class="fc-item" id="py-read" data-legacy="d30" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#pyramids">
+        <li class="fc-item" id="py-read" data-focus="ap" data-legacy="d30" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#pyramids">
           <p class="q">How do you read a population pyramid?</p>
           <p class="a">Males on the left, females on the right; age groups (usually 5 years) up the side, youngest at the bottom. Always check the top bracket: longer-lived countries have more people there.</p>
         </li>
-        <li class="fc-item" id="py-name" data-legacy="d30" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#pyramids">
+        <li class="fc-item" id="py-name" data-focus="detail" data-legacy="d30" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#pyramids">
           <p class="q">Why are they called pyramids?</p>
           <p class="a">Early on most countries had the most children and fewer people at each older age, which made a pyramid shape.</p>
         </li>
-        <li class="fc-item" id="py-low" data-legacy="d31" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#pyramids">
+        <li class="fc-item" id="py-low" data-focus="ap" data-legacy="d31" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#pyramids">
           <p class="q">Describe a lower-income country's pyramid. Which countries fit?</p>
           <p class="a">Wide base, narrow top, like a pyramid or evergreen tree. Ages 0–14 are <strong>over 40%</strong>; each group from 15–19 up is smaller; the top three groups are <strong>under 10%</strong>. Pakistan, Yemen, Guatemala, Cameroon, Laos.</p>
         </li>
-        <li class="fc-item" id="py-high" data-legacy="d32" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#pyramids">
+        <li class="fc-item" id="py-high" data-focus="ap" data-legacy="d32" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#pyramids">
           <p class="q">Describe a higher-income country's pyramid. Which countries fit?</p>
           <p class="a">A slightly lopsided <strong>chimney</strong>, biggest in the middle, with the bulge moving up as the population ages and TFR falls. Italy, France, Sweden.</p>
         </li>
@@ -675,19 +681,19 @@
       <section id="religion" data-sec="religion" data-part="part-2-2" data-title="Religion and growth">
         <h2>Religion and growth <span class="pages">pp. 26–28</span></h2>
         <ol>
-        <li class="fc-item" id="re-oppose" data-legacy="d33" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#religion">
+        <li class="fc-item" id="re-oppose" data-focus="ap" data-legacy="d33" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#religion">
           <p class="q">Which religions oppose contraception, and what's the Nigeria example?</p>
           <p class="a">The Roman Catholic Church and some conservative branches of Islam. Northern Nigeria, where conservative Islam is practiced, grows faster than the south.</p>
         </li>
-        <li class="fc-item" id="re-catholic" data-legacy="d33" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#religion">
+        <li class="fc-item" id="re-catholic" data-focus="detail" data-legacy="d33" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#religion">
           <p class="q">Does religion predict growth in the Catholic world?</p>
           <p class="a">Not well. Some of the slowest-growing places are in the Catholic heartland; the teaching seems followed more closely farther from the Vatican. The Philippines grows fairly fast.</p>
         </li>
-        <li class="fc-item" id="re-bordeaux" data-legacy="d34" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#religion">
+        <li class="fc-item" id="re-bordeaux" data-focus="detail" data-legacy="d34" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#religion">
           <p class="q">What's the point of the Bordeaux field note?</p>
           <p class="a">Just in from Dakar, de Blij saw almost only adults and asked where the children were: France and Europe have fewer children and are aging.</p>
         </li>
-        <li class="fc-item" id="re-islam" data-legacy="d35" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#religion">
+        <li class="fc-item" id="re-islam" data-focus="detail" data-legacy="d35" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#religion">
           <p class="q">Compare Saudi Arabia and Indonesia.</p>
           <p class="a">Saudi Arabia (home of Mecca) grows about <strong>2%</strong> a year. Indonesia started family planning in <strong>1970</strong> despite conservative objections, using coercion and inducement; growth fell to <strong>1.6%</strong> (2000) and <strong>1.1%</strong> (2016).</p>
         </li>
@@ -696,51 +702,51 @@
       <section id="dtm" data-sec="dtm" data-part="part-2-2" data-title="The demographic transition">
         <h2>The demographic transition <span class="pages">pp. 28–31</span></h2>
         <ol>
-        <li class="fc-item" id="dt-def" data-legacy="d36" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#dtm">
+        <li class="fc-item" id="dt-def" data-focus="ap" data-legacy="d36" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#dtm">
           <p class="q">What is the demographic transition model, and what is it based on?</p>
           <p class="a">A model saying birth and death rates change in predictable ways as a country develops economically. It's based on western Europe after the Industrial Revolution.</p>
         </li>
-        <li class="fc-item" id="dt-s1" data-legacy="d37" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#stage-1">
+        <li class="fc-item" id="dt-s1" data-focus="ap" data-legacy="d37" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#stage-1">
           <p class="q">Describe stage 1.</p>
           <p class="a">High birth rates and equally high, swinging death rates, so low and unpredictable growth. Disease, crop failures and war push deaths up. Every place spent most of history here.</p>
         </li>
-        <li class="fc-item" id="dt-plague" data-legacy="d37" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#stage-1">
+        <li class="fc-item" id="dt-plague" data-focus="detail" data-legacy="d37" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#stage-1">
           <p class="q">Describe the Black Death.</p>
           <p class="a">Bubonic plague in the 1300s. It started in <strong>Crimea</strong>, followed trade routes to Sicily and moved north by contagious diffusion on rats, whose fleas spread it. It came in waves and killed <strong>¼ to ½</strong> of people, worst in the more connected west. Britain fell from nearly 4 million to just over 2 million.</p>
         </li>
-        <li class="fc-item" id="dt-famine" data-legacy="d37" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#stage-1">
+        <li class="fc-item" id="dt-famine" data-focus="detail" data-legacy="d37" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#stage-1">
           <p class="q">What else held stage 1 populations down?</p>
           <p class="a">Famine (one just before the plague weakened people; famines in India and China in the 1700s and 1800s killed millions) and destructive wars.</p>
         </li>
-        <li class="fc-item" id="dt-s2" data-legacy="d38" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#stage-2">
+        <li class="fc-item" id="dt-s2" data-focus="ap" data-legacy="d38" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#stage-2">
           <p class="q">Describe stage 2 in Europe.</p>
           <p class="a">Starting around <strong>1750</strong>, better food, sanitation, soap and medicine cut deaths while births stayed high. Britain's death rate fell from about <strong>35</strong> to about <strong>16</strong> per 1,000 by 1850, and its population exploded.</p>
         </li>
-        <li class="fc-item" id="dt-s2-today" data-legacy="d38" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#stage-2">
+        <li class="fc-item" id="dt-s2-today" data-focus="ap" data-legacy="d38" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#stage-2">
           <p class="q">Which countries are in stage 2 today, and what helped them?</p>
           <p class="a">Lower-income countries like <strong>Palestine and Afghanistan</strong>, helped by the spread of Western medicine, including childhood vaccinations.</p>
         </li>
-        <li class="fc-item" id="dt-s3" data-legacy="d39" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#stage-3">
+        <li class="fc-item" id="dt-s3" data-focus="ap" data-legacy="d39" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#stage-3">
           <p class="q">Describe stage 3 and why birth rates fell in Britain.</p>
           <p class="a">Birth rates fall quickly, deaths keep falling and growth slows. Britain: about <strong>1870</strong> through the world wars. New opportunities for women, later marriage, and fewer infant and child deaths.</p>
         </li>
-        <li class="fc-item" id="dt-s3-today" data-legacy="d39" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#stage-3">
+        <li class="fc-item" id="dt-s3-today" data-focus="ap" data-legacy="d39" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#stage-3">
           <p class="q">Stage 3 today: what do Brazil and Mali show?</p>
           <p class="a">Brazil's birth rate fell because of modern contraceptives, not later marriage. In Mali, girls who go to school end up with just over <strong>half</strong> as many children.</p>
         </li>
-        <li class="fc-item" id="dt-s4" data-legacy="d40" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#stage-4">
+        <li class="fc-item" id="dt-s4" data-focus="ap" data-legacy="d40" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#stage-4">
           <p class="q">Describe stage 4.</p>
           <p class="a">Low birth and death rates; growth stable or slowing. Britain after <strong>1950</strong>; contraception and legal abortion kept births low. Today: the U.S. and UK.</p>
         </li>
-        <li class="fc-item" id="dt-s5" data-legacy="d41" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#stage-5">
+        <li class="fc-item" id="dt-s5" data-focus="ap" data-legacy="d41" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#stage-5">
           <p class="q">Describe stage 5.</p>
           <p class="a">Very low birth rates, rising death rates, falling natural increase. <strong>Japan and Russia.</strong></p>
         </li>
-        <li class="fc-item" id="dt-zpg" data-legacy="d41" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#stage-5">
+        <li class="fc-item" id="dt-zpg" data-focus="ap" data-legacy="d41" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#stage-5">
           <p class="q">How fast is the world growing now, and when might growth stop?</p>
           <p class="a">About <strong>1.2%</strong>, still over <strong>80 million</strong> people a year. Many demographers predict zero population growth within about <strong>50 years</strong>: a stationary population level (SPL).</p>
         </li>
-        <li class="fc-item" id="dt-spl" data-legacy="d42" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#stage-5">
+        <li class="fc-item" id="dt-spl" data-focus="detail" data-legacy="d42" data-href="/human-geo/quiz/reading-2.1-2.2/reading/#stage-5">
           <p class="q">What happened to the late-1980s SPL predictions?</p>
           <p class="a">The World Bank predicted U.S. 276 million (2035), Brazil 353 million (2070), Mexico 254 million (2075), China 1.4 billion (2090), India 1.6 billion (2150). Unrealistic: China passed 1.2 billion in 1994 and India 1 billion in 1998. Newer: China <strong>1.45 billion</strong> (2030), India <strong>1.7 billion</strong> (2060).</p>
         </li>

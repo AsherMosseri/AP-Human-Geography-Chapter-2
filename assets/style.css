@@ -720,6 +720,8 @@ html[data-theme="dark"] .theme-toggle .i-dark { display: block; }
   --review-bg: rgba(188, 76, 0, 0.1);
   --fc-shadow: 0 1px 2px rgba(31, 35, 40, 0.06), 0 10px 30px rgba(31, 35, 40, 0.1);
   --fc-back: #f6f9ff;
+  --danger: #cf222e;
+  --backdrop: rgba(15, 20, 26, 0.45);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -729,6 +731,8 @@ html[data-theme="dark"] .theme-toggle .i-dark { display: block; }
     --review-bg: rgba(219, 109, 40, 0.16);
     --fc-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 32px rgba(0, 0, 0, 0.45);
     --fc-back: #18202c;
+    --danger: #da3633;
+    --backdrop: rgba(0, 0, 0, 0.6);
   }
 }
 :root[data-theme="dark"] {
@@ -738,6 +742,8 @@ html[data-theme="dark"] .theme-toggle .i-dark { display: block; }
   --review-bg: rgba(219, 109, 40, 0.16);
   --fc-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 32px rgba(0, 0, 0, 0.45);
   --fc-back: #18202c;
+  --danger: #da3633;
+  --backdrop: rgba(0, 0, 0, 0.6);
 }
 
 /* The cards' source list; the script deals from it. (No <noscript> fallback: Turbo parses
@@ -760,6 +766,46 @@ html[data-theme="dark"] .theme-toggle .i-dark { display: block; }
   cursor: pointer;
 }
 .fc-decks, .fc-tools { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* Focus: a segmented control (Everything / AP concepts / Reading details) */
+.fc-seg {
+  display: inline-flex;
+  max-width: 100%;
+  padding: 3px;
+  gap: 2px;
+  border-radius: 999px;
+  background: var(--grid-line);
+}
+.fc-seg button {
+  font: inherit;
+  font-size: 0.85rem;
+  line-height: 1.3;
+  padding: 5px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color .2s ease, color .2s ease, box-shadow .2s ease, transform .12s ease;
+}
+.fc-seg button .n { font-variant-numeric: tabular-nums; margin-left: 2px; opacity: 0.75; }
+.fc-seg button[aria-pressed="true"] {
+  background: var(--card);
+  color: var(--text);
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+.fc-seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.fc-seg button:active { transform: scale(0.96); }
+@media (hover: hover) { .fc-seg button:not([aria-pressed="true"]):hover { color: var(--text); } }
+@media (max-width: 480px) {
+  .fc-seg { display: flex; width: 100%; }
+  .fc-seg button { flex: 1; padding: 6px 4px; }
+  .fc-seg button .n { display: none; }
+}
+.fc-focus-note { flex-basis: 100%; margin: -4px 0 0; font-size: 0.85rem; color: var(--muted); }
+.fc-focus-note[hidden] { display: none; }
 .fc-chip {
   font: inherit;
   font-size: 0.85rem;
@@ -842,7 +888,17 @@ html[data-theme="dark"] .theme-toggle .i-dark { display: block; }
   -webkit-backface-visibility: hidden;
 }
 .fc-back { transform: rotateY(180deg); background: var(--fc-back); }
-.fc-top { display: flex; justify-content: space-between; gap: 12px; margin: 0; }
+.fc-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin: 0; }
+.fc-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.fc-kind {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 1px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.fc-kind.ap { color: var(--accent); background: var(--term-bg); }
+.fc-kind.detail { color: var(--muted); background: var(--grid-line); }
 .fc-sec {
   font-size: 0.72rem;
   font-weight: 700;
@@ -975,3 +1031,50 @@ a.card p.card-progress { margin-top: 6px; font-size: 0.9rem; font-weight: 600; c
 .check-cta:active { background: var(--term-bg-hover); }
 @media (hover: hover) { .check-cta:hover { background: var(--term-bg-hover); } }
 
+
+/* ---------- Confirm modal (window.siteConfirm in notes.js) ---------- */
+.modal {
+  width: min(400px, calc(100vw - 32px));
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--card);
+  color: var(--text);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: modal-in .22s cubic-bezier(.2,.9,.3,1.15);
+}
+.modal::backdrop { background: var(--backdrop); animation: modal-fade .22s ease; }
+.modal.closing { animation: modal-out .16s ease forwards; }
+.modal.closing::backdrop { animation: modal-fade .16s ease reverse forwards; }
+@keyframes modal-in { from { opacity: 0; transform: translateY(12px) scale(0.95); } }
+@keyframes modal-out { to { opacity: 0; transform: translateY(6px) scale(0.97); } }
+@keyframes modal-fade { from { opacity: 0; } }
+.modal-box { padding: 22px 22px 18px; }
+.modal .modal-title { margin: 0 0 6px; font-size: 1.15rem; border: 0; padding: 0; }
+.modal-text { margin: 0 0 20px; color: var(--muted); font-size: 0.95rem; }
+.modal-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
+.modal-btn {
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.92rem;
+  padding: 9px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+  transition: background-color .15s ease, border-color .15s ease, transform .12s ease, filter .15s ease;
+}
+.modal-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.modal-btn.danger { background: var(--danger); border-color: var(--danger); color: #fff; }
+.modal-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.modal-btn:active { transform: scale(0.96); }
+@media (hover: hover) {
+  .modal-btn:hover { background: var(--card-hover); border-color: var(--accent); }
+  .modal-btn.primary:hover, .modal-btn.danger:hover { filter: brightness(1.08); }
+  .modal-btn.primary:hover { background: var(--accent); }
+  .modal-btn.danger:hover { background: var(--danger); border-color: var(--danger); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .modal, .modal::backdrop, .modal.closing, .modal.closing::backdrop { animation: none; }
+}

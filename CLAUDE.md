@@ -63,7 +63,9 @@ NASA) are fine with a credit.
 a flashcards page with one card per quizzable fact, grouped by the guide's sections, each
 answer linking to its heading in the guide (`reading/#id`). The guide ends each part with a
 link to that part's deck (`flashcard/#part-2-1`). Card ids are stable: marks are saved under
-them, so reword a card freely but don't rename its id. Out-of-date numbers keep the book's figure and add
+them, so reword a card freely but don't rename its id. Each card is tagged `data-focus="ap"` (an idea an AP
+question could apply to a map, graph or scenario) or `"detail"` (the reading's stories, field notes
+and exact numbers); the deck can be filtered to either. Out-of-date numbers keep the book's figure and add
 an "Update" box; book errors get a short note saying which value to use on the quiz.
 
 **Apply it.** Every chart has an "Apply it" box and every key-concept note (`class="term key"`) has
@@ -94,6 +96,8 @@ an "Apply it" section that uses an example from the reading to show the concept 
   so anchor jumps clear it. Anything else sticky or fixed must sit below it or above z-index 10.
 - Dark mode: every new color needs a dark value in both dark blocks of `style.css`
   (`@media (prefers-color-scheme: dark) :root:not([data-theme="light"])` and `:root[data-theme="dark"]`).
+- **No `alert()`, `confirm()` or `prompt()`.** Ask with `window.siteConfirm({ title, text, ok, cancel,
+  danger })` from `notes.js`, a themed `<dialog>` that returns a Promise of true/false.
 - Hover styles go inside `@media (hover: hover)`; give every button `:active` and `:focus-visible` too.
 - Charts must stay readable at 390px wide: prefer HTML/CSS bars and positioned elements; SVG text
   needs a larger size under `@media (max-width: 480px)`.

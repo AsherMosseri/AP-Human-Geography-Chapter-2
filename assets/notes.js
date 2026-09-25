@@ -88,9 +88,57 @@
     t.classList.add("show");
   });
 
+  // A styled stand-in for window.confirm, which looks different in every browser and can't be
+  // themed. siteConfirm({ title, text, ok, cancel, danger }) returns a Promise of true/false.
+  // It uses <dialog>, so focus stays inside, Esc cancels and the page behind is inert; Cancel
+  // gets focus first, so a stray Enter never confirms something destructive.
+  let openModal = null;
+  window.siteConfirm = function (o) {
+    if (openModal) openModal.finish(false);
+    return new Promise(function (resolve) {
+      const d = document.createElement("dialog");
+      d.className = "modal";
+      d.setAttribute("aria-labelledby", "modal-title");
+      d.setAttribute("aria-describedby", "modal-text");
+      d.innerHTML =
+        '<div class="modal-box"><h2 class="modal-title" id="modal-title"></h2>' +
+        '<p class="modal-text" id="modal-text"></p><div class="modal-actions">' +
+        '<button type="button" class="modal-btn" data-v="0"></button>' +
+        '<button type="button" class="modal-btn primary" data-v="1"></button></div></div>';
+      d.querySelector(".modal-title").textContent = o.title || "Are you sure?";
+      d.querySelector(".modal-text").textContent = o.text || "";
+      d.querySelector("[data-v='0']").textContent = o.cancel || "Cancel";
+      const ok = d.querySelector("[data-v='1']");
+      ok.textContent = o.ok || "OK";
+      if (o.danger) ok.classList.add("danger");
+
+      let done = false;
+      function finish(value) {
+        if (done) return;
+        done = true;
+        openModal = null;
+        resolve(value);
+        const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        d.classList.add("closing");
+        setTimeout(function () { if (d.open) d.close(); d.remove(); }, calm ? 0 : 160);
+      }
+      d.addEventListener("cancel", function (e) { e.preventDefault(); finish(false); });   // Esc
+      d.addEventListener("click", function (e) {
+        const b = e.target.closest(".modal-btn");
+        if (b) finish(b.dataset.v === "1");
+        else if (e.target === d) finish(false);   // the backdrop (the box fills the dialog itself)
+      });
+      openModal = { finish: finish };
+      document.body.appendChild(d);
+      d.showModal();
+      d.querySelector("[data-v='0']").focus();
+    });
+  };
+
   // Before Turbo snapshots a page for its back/forward preview, put it back to rest.
   document.addEventListener("turbo:before-cache", function () {
     closeNote(false);
     if (tip) tip.classList.remove("show");
+    if (openModal) openModal.finish(false);
   });
 })();

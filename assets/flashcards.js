@@ -61,8 +61,10 @@
   // Read the controls into options, or write options back into them.
   function readOpts(page) {
     const deck = page.querySelector("[data-deck][aria-pressed='true']");
+    const focus = page.querySelector("[data-focus-pick][aria-pressed='true']");
     return {
       section: page.querySelector(".fc-section").value,
+      focus: focus ? focus.dataset.focusPick : "all",
       deck: deck ? deck.dataset.deck : "all",
       shuffle: page.querySelector("[data-fc='shuffle']").getAttribute("aria-pressed") === "true",
     };
@@ -74,15 +76,25 @@
     page.querySelectorAll("[data-deck]").forEach(function (b) {
       b.setAttribute("aria-pressed", String(b.dataset.deck === o.deck));
     });
+    pick(page, "[data-focus-pick]", o.focus || "all");
     page.querySelector("[data-fc='shuffle']").setAttribute("aria-pressed", String(o.shuffle));
   }
+
+  // Press one button of a group ("all", "ap", "detail"...) and release the others.
+  function pick(page, selector, value) {
+    page.querySelectorAll(selector).forEach(function (b) {
+      const v = b.dataset.deck || b.dataset.focusPick;
+      b.setAttribute("aria-pressed", String(v === value));
+    });
+  }
+  function inFocus(it, focus) { return !focus || focus === "all" || it.dataset.focus === focus; }
 
   function build(page) {
     const o = readOpts(page);
     const marks = load(page.dataset.store);
     const order = [];
     page.querySelectorAll(".fc-item").forEach(function (it) {
-      if (inSection(it, o.section) && (o.deck === "all" || o.deck === markOf(marks, it.id))) order.push(it.id);
+      if (inSection(it, o.section) && inFocus(it, o.focus) && (o.deck === "all" || o.deck === markOf(marks, it.id))) order.push(it.id);
     });
     if (o.shuffle) {
       for (let i = order.length - 1; i > 0; i--) {
@@ -124,6 +136,9 @@
     if (!finished) {
       const it = document.getElementById(s.order[s.index]);
       card.querySelector(".fc-sec").textContent = it.closest("[data-sec]").dataset.title;
+      const kind = card.querySelector(".fc-kind");
+      kind.textContent = it.dataset.focus === "ap" ? "AP concept" : "Reading detail";
+      kind.className = "fc-kind " + it.dataset.focus;
       card.querySelector(".fc-q").innerHTML = it.querySelector(".q").innerHTML;
       card.querySelector(".fc-a").innerHTML = it.querySelector(".a").innerHTML;
       card.querySelector(".fc-link").href = it.dataset.href;
@@ -134,11 +149,22 @@
       setFlipped(card, s.flipped, false);
     }
 
-    // Counts for the current section, shown on the deck chips and the tally.
+    // Counts for the current section: the focus buttons count every card in it, the deck
+    // chips and the tally count the cards in the chosen focus.
     const counts = { got: 0, review: 0, none: 0 };
+    const kinds = { all: 0, ap: 0, detail: 0 };
     page.querySelectorAll(".fc-item").forEach(function (it) {
-      if (inSection(it, s.opts.section)) counts[markOf(marks, it.id)]++;
+      if (!inSection(it, s.opts.section)) return;
+      kinds.all++;
+      kinds[it.dataset.focus]++;
+      if (inFocus(it, s.opts.focus)) counts[markOf(marks, it.id)]++;
     });
+    page.querySelectorAll("[data-focus-pick] .n").forEach(function (n) {
+      n.textContent = kinds[n.closest("[data-focus-pick]").dataset.focusPick];
+    });
+    const note = page.querySelector(".fc-focus-note");
+    note.textContent = FOCUS_NOTE[s.opts.focus] || "";
+    note.hidden = !note.textContent;
     page.querySelectorAll("[data-deck] .n").forEach(function (n) {
       const d = n.closest("[data-deck]").dataset.deck;
       n.textContent = d === "all" ? counts.got + counts.review + counts.none : counts[d];
@@ -154,9 +180,8 @@
       const missed = done.querySelector("[data-fc='missed']");
       if (!total) {
         title.textContent = "No cards here";
-        text.textContent = s.opts.deck === "review" ? "Nothing to review in this section. Nice work."
-          : s.opts.deck === "none" ? "You've marked every card in this section."
-          : s.opts.deck === "got" ? "Nothing marked Got it here yet." : "";
+        text.textContent = s.opts.deck === "review" ? "Nothing to review in these cards. Nice work."
+          : s.opts.deck === "none" ? "You've marked every one of these cards." : "";
       } else {
         title.textContent = "Deck done";
         text.textContent = "This round: " + s.got + " got it, " + s.review + " to review.";
@@ -166,6 +191,11 @@
       done.querySelector("[data-fc='restart']").hidden = !total;
     }
   }
+
+  const FOCUS_NOTE = {
+    ap: "Ideas an AP question could ask you to apply to a map, graph or scenario.",
+    detail: "The reading's stories, field notes and exact numbers: worth knowing if the quiz is written from the book.",
+  };
 
   function card(page) { return page.querySelector(".fc-card"); }
 
@@ -308,7 +338,13 @@
     }
     const deck = e.target.closest("[data-deck]");
     if (deck) {
-      page.querySelectorAll("[data-deck]").forEach(function (b) { b.setAttribute("aria-pressed", String(b === deck)); });
+      pick(page, "[data-deck]", deck.dataset.deck);
+      restart(page);
+      return;
+    }
+    const focus = e.target.closest("[data-focus-pick]");
+    if (focus) {
+      pick(page, "[data-focus-pick]", focus.dataset.focusPick);
       restart(page);
       return;
     }
@@ -325,14 +361,22 @@
         restart(page);
         break;
       case "missed":
-        page.querySelectorAll("[data-deck]").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.deck === "review")); });
+        pick(page, "[data-deck]", "review");
         restart(page);
         break;
       case "reset":
-        if (!window.confirm("Clear all your Got it and Review marks for this reading?")) return;
-        save(page.dataset.store, {});
-        page.querySelectorAll("[data-deck]").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.deck === "all")); });
-        restart(page);
+        window.siteConfirm({
+          title: "Clear all marks?",
+          text: "This removes every Got it and Review mark for this reading on this device. It can't be undone.",
+          ok: "Clear marks",
+          cancel: "Keep them",
+          danger: true,
+        }).then(function (yes) {
+          if (!yes || !document.contains(page)) return;
+          save(page.dataset.store, {});
+          pick(page, "[data-deck]", "all");
+          restart(page);
+        });
         break;
     }
   });
@@ -344,7 +388,7 @@
 
   document.addEventListener("keydown", function (e) {
     const page = document.querySelector(".fc-page.fc-ready");
-    if (!page || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (!page || e.metaKey || e.ctrlKey || e.altKey || document.querySelector("dialog[open]")) return;
     const t = e.target;
     if (t.closest && t.closest("select, input, textarea, a")) return;
     const onButton = t.closest && t.closest("button");
