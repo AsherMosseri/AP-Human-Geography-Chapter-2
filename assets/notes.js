@@ -1,48 +1,60 @@
 // Click-to-explain panel for study guide pages.
 // Any element with data-note="id" opens the <template id="note-id"> in the panel.
 // Chart marks with data-tip="text" also show a small hover tooltip.
+//
+// Turbo Drive swaps the <body> without reloading, and this file (in <head>) runs only once.
+// So: document-level listeners are added once, page elements are looked up fresh every time
+// (never cached), and per-page setup re-runs on turbo:load. "Bound" marks are JS properties,
+// not data- attributes: Back/Forward restores a cloned snapshot that keeps attributes but
+// drops listeners.
 
 (function () {
-  const panel = document.getElementById("panel");
-  const panelTitle = document.getElementById("panel-title");
-  const panelBody = document.getElementById("panel-body");
-  const closeBtn = panel.querySelector(".panel-close");
+  if (window.__notesInit) return;
+  window.__notesInit = true;
+
   let lastTrigger = null;
 
+  function panel() { return document.getElementById("panel"); }
+
   function openNote(id, trigger) {
+    const p = panel();
     const tpl = document.getElementById("note-" + id);
-    if (!tpl) return;
-    panelTitle.textContent = tpl.dataset.title || "";
-    panelBody.replaceChildren(tpl.content.cloneNode(true));
-    panelBody.scrollTop = 0;
-    panel.classList.add("open");
-    panel.setAttribute("aria-hidden", "false");
+    if (!p || !tpl) return;
+    document.getElementById("panel-title").textContent = tpl.dataset.title || "";
+    const body = document.getElementById("panel-body");
+    body.replaceChildren(tpl.content.cloneNode(true));
+    body.scrollTop = 0;
+    p.classList.add("open");
+    p.setAttribute("aria-hidden", "false");
     lastTrigger = trigger;
-    closeBtn.focus({ preventScroll: true });
+    p.querySelector(".panel-close").focus({ preventScroll: true });
   }
 
-  function closeNote() {
-    panel.classList.remove("open");
-    panel.setAttribute("aria-hidden", "true");
-    if (lastTrigger) lastTrigger.focus({ preventScroll: true });
+  function closeNote(restoreFocus) {
+    const p = panel();
+    if (!p || !p.classList.contains("open")) return;
+    p.classList.remove("open");
+    p.setAttribute("aria-hidden", "true");
+    if (restoreFocus && lastTrigger && document.contains(lastTrigger)) {
+      lastTrigger.focus({ preventScroll: true });
+    }
   }
 
   document.addEventListener("click", function (e) {
+    if (e.target.closest(".panel-close")) { closeNote(true); return; }
     const trigger = e.target.closest("[data-note]");
     if (trigger) {
       e.preventDefault();
       openNote(trigger.dataset.note, trigger);
       return;
     }
-    if (panel.classList.contains("open") && !panel.contains(e.target)) closeNote();
+    const p = panel();
+    if (p && p.classList.contains("open") && !p.contains(e.target)) closeNote(true);
   });
 
   // Keyboard: Enter/Space on SVG marks and figure cards, Esc closes.
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && panel.classList.contains("open")) {
-      closeNote();
-      return;
-    }
+    if (e.key === "Escape") { closeNote(true); return; }
     const t = e.target;
     if ((e.key === "Enter" || e.key === " ") && t.matches && t.matches("[data-note]:not(button)")) {
       e.preventDefault();
@@ -50,36 +62,57 @@
     }
   });
 
-  closeBtn.addEventListener("click", closeNote);
-
-  // Hover tooltips on chart marks
-  const tip = document.createElement("div");
-  tip.className = "tip";
-  tip.setAttribute("aria-hidden", "true");
-  document.body.appendChild(tip);
+  // Hover tooltips on chart marks. The element is re-attached if Turbo replaced the body.
+  let tip = null;
+  function tipEl() {
+    if (!tip) {
+      tip = document.createElement("div");
+      tip.className = "tip";
+      tip.setAttribute("aria-hidden", "true");
+    }
+    if (!document.body.contains(tip)) document.body.appendChild(tip);
+    return tip;
+  }
 
   document.addEventListener("pointermove", function (e) {
     const mark = e.target.closest && e.target.closest("[data-tip]");
     if (!mark || e.pointerType === "touch") {
-      tip.classList.remove("show");
+      if (tip) tip.classList.remove("show");
       return;
     }
-    tip.textContent = mark.dataset.tip;
-    const x = Math.min(e.clientX + 14, window.innerWidth - tip.offsetWidth - 8);
-    tip.style.left = x + "px";
-    tip.style.top = e.clientY + 16 + "px";
-    tip.classList.add("show");
+    const t = tipEl();
+    t.textContent = mark.dataset.tip;
+    const x = Math.min(e.clientX + 14, window.innerWidth - t.offsetWidth - 8);
+    t.style.left = x + "px";
+    t.style.top = e.clientY + 16 + "px";
+    t.classList.add("show");
   });
 
-  // Checklist: remember ticked boxes in this browser only
-  const key = "checklist:" + location.pathname;
-  let saved = {};
-  try { saved = JSON.parse(localStorage.getItem(key)) || {}; } catch (err) { saved = {}; }
-  document.querySelectorAll(".checklist input[type=checkbox]").forEach(function (box) {
-    if (saved[box.id]) box.checked = true;
-    box.addEventListener("change", function () {
-      saved[box.id] = box.checked;
-      try { localStorage.setItem(key, JSON.stringify(saved)); } catch (err) { /* storage unavailable */ }
-    });
+  // Before Turbo snapshots a page for its back/forward preview, put it back to rest.
+  document.addEventListener("turbo:before-cache", function () {
+    closeNote(false);
+    if (tip) tip.classList.remove("show");
   });
+
+  // Checklist: remember ticked boxes in this browser only. Runs per page.
+  function setupChecklist() {
+    const boxes = document.querySelectorAll(".checklist input[type=checkbox]");
+    if (!boxes.length) return;
+    const key = "checklist:" + location.pathname;
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem(key)) || {}; } catch (err) { saved = {}; }
+    boxes.forEach(function (box) {
+      if (box._bound) return;
+      box._bound = true;
+      box.checked = !!saved[box.id];
+      box.addEventListener("change", function () {
+        saved[box.id] = box.checked;
+        try { localStorage.setItem(key, JSON.stringify(saved)); } catch (err) { /* storage unavailable */ }
+      });
+    });
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", setupChecklist);
+  else setupChecklist();
+  document.addEventListener("turbo:load", setupChecklist);
 })();

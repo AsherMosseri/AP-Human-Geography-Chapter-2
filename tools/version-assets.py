@@ -24,7 +24,9 @@ for page in ROOT.rglob("*.html"):
     text = page.read_text()
 
     def add_version(match):
-        target = (page.parent / match.group(2)).resolve()
+        ref = match.group(2)
+        # Root paths (/assets/...) resolve from the repo root, which is the site root.
+        target = (ROOT / ref.lstrip("/")) if ref.startswith("/") else (page.parent / ref).resolve()
         if not target.is_file():
             return match.group(0)
         return f'{match.group(1)}?v={file_hash(target)}"'
