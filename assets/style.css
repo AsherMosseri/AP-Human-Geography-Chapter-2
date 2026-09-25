@@ -520,3 +520,36 @@ html[data-theme="dark"] .theme-toggle .i-dark { display: block; }
   html:not([data-theme]) .theme-toggle .i-light { display: none; }
   html:not([data-theme]) .theme-toggle .i-dark { display: block; }
 }
+
+/* ---------- Hover and press feedback for every button ----------
+   Hover rules sit inside (hover: hover) so a tap on a phone does not leave an element
+   stuck in its hover state; :active and :focus-visible work everywhere. */
+.panel-close {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  margin: -4px -6px 0 0;
+  border-radius: 8px;
+  transition: color .15s ease, background-color .15s ease;
+}
+.panel-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.panel-close:active { background: var(--term-bg-hover); }
+
+.figure-card, .cluster, .pyramid, .calc-presets button, .dtm-buttons button, .checklist label, a.card, .bar-row[data-note] {
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+.figure-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.calc-presets button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.checklist label { border-radius: 6px; padding: 2px 6px; margin: 0 -6px; }
+
+.figure-card:active, .cluster:active, .pyramid:active,
+.calc-presets button:active, .dtm-buttons button:active { background: var(--term-bg-hover); }
+
+@media (hover: hover) {
+  .panel-close:hover { color: var(--text); background: var(--card-hover); }
+  .figure-card:hover, .cluster:hover, .pyramid:hover,
+  .calc-presets button:hover, .dtm-buttons button:hover { background: var(--card-hover); border-color: var(--accent); }
+  .checklist label:hover { background: var(--card-hover); }
+}
