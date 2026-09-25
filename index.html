@@ -3,79 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AP Human Geography: Chapter 2</title>
-  <style>
-    :root {
-      --bg: #f7f7f5;
-      --text: #1f2328;
-      --muted: #59636e;
-      --accent: #1f6feb;
-      --card: #ffffff;
-      --border: #d8dee4;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0d1117;
-        --text: #e6edf3;
-        --muted: #9198a1;
-        --accent: #4493f8;
-        --card: #161b22;
-        --border: #30363d;
-      }
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      line-height: 1.6;
-      background: var(--bg);
-      color: var(--text);
-    }
-    main {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 48px 16px;
-    }
-    h1 { margin: 0 0 4px; font-size: 2rem; }
-    .subtitle { margin: 0 0 32px; color: var(--muted); }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 20px 24px;
-      margin-bottom: 16px;
-    }
-    .card h2 { margin-top: 0; font-size: 1.2rem; }
-    ul { padding-left: 20px; }
-    .status { color: var(--accent); font-weight: 600; }
-    footer { margin-top: 32px; color: var(--muted); font-size: 0.9rem; }
-  </style>
+  <title>AP Human Geography</title>
+  <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
   <main>
     <h1>AP Human Geography</h1>
-    <p class="subtitle">Chapter 2: Population and Health</p>
+    <p class="subtitle">Study hub</p>
 
-    <div class="card">
-      <p class="status">If you can read this, GitHub Pages is working.</p>
-      <p>This is a placeholder page. Study materials for the chapter will go here.</p>
-    </div>
+    <a class="card" href="quiz/">
+      <h2>Quizzes</h2>
+      <p>Study guides for the reading quizzes.</p>
+    </a>
 
-    <div class="card">
-      <h2>Coming soon</h2>
-      <ul>
-        <li>Population distribution and density</li>
-        <li>Population growth and decline</li>
-        <li>The demographic transition model</li>
-        <li>Malthus and population policies</li>
-        <li>The epidemiologic transition and health</li>
-      </ul>
-    </div>
-
-    <footer>Served from <span id="host"></span></footer>
+    <a class="card" href="test/">
+      <h2>Tests</h2>
+      <p>Study guides for the chapter tests.</p>
+    </a>
   </main>
-  <script>
-    document.getElementById("host").textContent = window.location.host || "a local file";
-  </script>
 </body>
 </html>
