@@ -481,20 +481,54 @@ ol.timeline > li { margin-bottom: 10px; }
   .calc-out > div { flex-direction: column; gap: 0; }
 }
 
-/* Site header: breadcrumbs on the left, theme toggle on the right */
+/* Site header: breadcrumbs on the left, theme toggle on the right. It stays pinned to the top
+   so the way back and the theme toggle are reachable from the middle of a long page. The
+   header itself is only as wide as the content column; a box-shadow paints its background
+   out to the window edges and border-image-outset does the same for the bottom rule. Neither
+   adds scroll width, so the page never scrolls sideways, and clip-path trims the shadow to the
+   header's own height. It sits under the explanation panel (z-index 20) and the chart
+   tooltip (30). */
 .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   max-width: 760px;
   margin: 0 auto;
-  padding: 16px 16px 0;
+  padding: 10px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   min-height: 38px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  border-image: linear-gradient(var(--border), var(--border)) 0 0 1 0 / 0 0 1px 0 / 0 100vmax;
+  box-shadow: 0 0 0 100vmax var(--bg);
+  clip-path: inset(0 -100vmax);
 }
 .site-header .breadcrumbs { margin: 0; }
 .guide .site-header { max-width: 760px; }
 main { padding-top: 16px; }
+/* Anchor jumps (and Turbo's scroll to #section) land below the pinned header. */
+html { scroll-padding-top: 64px; }
+
+/* Phones: the trail shrinks to one "‹ parent" link, so the pinned header stays one short line.
+   The page's own name is already its h1. */
+@media (max-width: 600px) {
+  .breadcrumbs > a:not(:last-of-type),
+  .breadcrumbs > span:not(.here),
+  .breadcrumbs > .here:not(:only-child) { display: none; }
+  .breadcrumbs > a:last-of-type { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px 4px 0; font-weight: 600; }
+  .breadcrumbs > a:last-of-type::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-left: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    margin-left: 3px;
+  }
+}
 
 /* Theme toggle (same behavior as the main site). Hidden in the markup and revealed by its
    script, so a visitor with JS off never sees a control that cannot do anything. Which icon
@@ -941,5 +975,3 @@ a.card p.card-progress { margin-top: 6px; font-size: 0.9rem; font-weight: 600; c
 .check-cta:active { background: var(--term-bg-hover); }
 @media (hover: hover) { .check-cta:hover { background: var(--term-bg-hover); } }
 
-/* Reading-guide headings are link targets from the checklist */
-.guide main h2[id], .guide main h3[id] { scroll-margin-top: 16px; }

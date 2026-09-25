@@ -90,6 +90,8 @@ an "Apply it" section that uses an example from the reading to show the concept 
   restores a cloned snapshot that keeps attributes but drops listeners.
 - The theme toggle, pre-paint theme script and scroll-restoration script are copied from the main
   site (thejunkdrawer-website). Keep the scroll-restoration script byte-identical to the main site's.
+- The site header is pinned (`position: sticky`, z-index 10) and `html` has `scroll-padding-top`
+  so anchor jumps clear it. Anything else sticky or fixed must sit below it or above z-index 10.
 - Dark mode: every new color needs a dark value in both dark blocks of `style.css`
   (`@media (prefers-color-scheme: dark) :root:not([data-theme="light"])` and `:root[data-theme="dark"]`).
 - Hover styles go inside `@media (hover: hover)`; give every button `:active` and `:focus-visible` too.
