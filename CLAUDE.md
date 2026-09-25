@@ -9,7 +9,7 @@ study.thejunkdrawerapp.com. Work directly on `main`.
 /human-geo/quiz/                    reading-quiz study guides   e.g. /human-geo/quiz/reading-2.1-2.2/
   <reading>/                        options page: Reading guide, Flashcards, Practice quiz (soon)
   <reading>/reading/                the guide itself
-  <reading>/flashcards/             one card per quizzable fact (checklist/ redirects here)
+  <reading>/flashcard/              one card per quizzable fact (checklist/, flashcards/ redirect here)
 /human-geo/test/                    chapter-test study guides   e.g. /human-geo/test/chapter-2/
 /bio/                               Biology (planned; same quiz/ and test/ layout)
 /quiz/..., /test/...                redirect pages for the old addresses; keep them
@@ -62,7 +62,7 @@ NASA) are fine with a credit.
 **Every fact from the reading stays in.** The teacher can quiz on anything, so every reading gets
 a flashcards page with one card per quizzable fact, grouped by the guide's sections, each
 answer linking to its heading in the guide (`reading/#id`). The guide ends each part with a
-link to that part's deck (`flashcards/#part-2-1`). Card ids are stable: marks are saved under
+link to that part's deck (`flashcard/#part-2-1`). Card ids are stable: marks are saved under
 them, so reword a card freely but don't rename its id. Out-of-date numbers keep the book's figure and add
 an "Update" box; book errors get a short note saying which value to use on the quiz.
 
