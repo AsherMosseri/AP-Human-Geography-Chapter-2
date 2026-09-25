@@ -4,7 +4,102 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AP Human Geography</title>
+  <!-- Declared BEFORE the stylesheet on purpose (same fix as the main site): if the only
+       background rule lives in the stylesheet, the browser has nothing to paint while it loads
+       and shows a ghost of the previous page on a fast refresh. -->
+  <style>
+    html { color-scheme: light dark; }
+    html, body { background: #f7f7f5; background: light-dark(#f7f7f5, #0d1117); }
+  </style>
   <link rel="stylesheet" href="assets/style.css?v=3ec631763b">
+  <script>
+    /* Scroll restoration on reload.
+       Safari records a history entry's scroll position on a LAG, so a fast flick followed
+       immediately by a refresh restores where you were BEFORE the flick; Chrome records it
+       eagerly and gets it right. Reading window.scrollY at pagehide is exact regardless of that
+       lag, so on a reload we take restoration off the browser and do it ourselves. Turbo visits
+       keep native "auto" - Turbo handles those itself.
+       NOTE: an earlier version saved from a throttled scroll listener, which is what made the
+       saved value stale in the first place. The pagehide read is the whole point; don't move it
+       back into a scroll handler. */
+    (function () {
+      /* Computed at USE, never cached. Turbo does not re-run this script on a client-side visit:
+         it merges the head, and this tag is byte-identical on every page, so it is treated as
+         already present. A cached key therefore stayed pinned to whichever page was FIRST loaded,
+         and every later scroll position was filed under that page's name. Land on /, click Pricing
+         in the footer, scroll, refresh - the position was saved as "tjd:y:/" while the reload
+         looked up "tjd:y:/pricing", found something stale or nothing, and left you near the top.
+         Typing the URL never showed it, because that is a full load and the key was right. */
+      function KEY() { return "tjd:y:" + location.pathname; }
+      var nav = performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
+      var isReload = nav ? nav.type === "reload" : (performance.navigation || {}).type === 1;
+      var settled = !isReload;
+
+      function setMode(m) { try { history.scrollRestoration = m; } catch (e) {} }
+      function remember() { try { sessionStorage.setItem(KEY(), String(window.scrollY || 0)); } catch (e) {} }
+
+      /* pagehide covers reload / navigation / close; visibilitychange catches iOS Safari, which
+         can discard a tab without ever firing pagehide. */
+      addEventListener("pagehide", remember);
+      addEventListener("visibilitychange", function () {
+        if (document.visibilityState === "hidden") remember();
+      });
+      /* Turbo forces "manual" when it boots (defer); re-assert "auto" once we're not mid-restore. */
+      addEventListener("turbo:load", function () { if (settled) setMode("auto"); });
+
+      if (settled) { setMode("auto"); return; }
+
+      setMode("manual");            /* stop Safari restoring its own stale value */
+      var target = 0;
+      try { target = parseInt(sessionStorage.getItem(KEY()), 10) || 0; } catch (e) {}
+      if (target <= 0) { settled = true; setMode("auto"); return; }
+
+      function done() { settled = true; setMode("auto"); }
+      /* The moment the visitor scrolls themselves, stop fighting them. */
+      addEventListener("wheel", done, { passive: true, once: true });
+      addEventListener("touchstart", done, { passive: true, once: true });
+      /* Only keys that actually scroll count. Canceling on ANY key meant that holding Cmd+R
+         to refresh repeatedly landed the next R keydown on the freshly loading document, which
+         read as "the visitor scrolled themselves", abandoned the restore and left them at the
+         top. That is exactly the "refresh really fast and it jumps to the top" report. It shows
+         up on the demo pages first because their content is drawn by script, so the restore is
+         still running when the next keypress arrives; everywhere else it had already finished. */
+      addEventListener("keydown", function (ev) {
+        if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
+        if (/^(Arrow|Page)|^( |Home|End|Spacebar)$/.test(ev.key)) done();
+      });
+
+      var frames = 0, steady = 0, lastH = -1, loaded = false;
+      addEventListener("load", function () { loaded = true; });
+      function restore() {
+        if (settled) return;
+        var h = document.documentElement.scrollHeight;
+        /* Clamp to what the page can actually scroll right now, so a still-growing document
+           doesn't read as "we landed". */
+        var want = Math.min(target, Math.max(0, h - innerHeight));
+        if (Math.abs(window.scrollY - want) >= 2) window.scrollTo(0, want);
+        /* Settle only once we are at the REAL target - not merely parked at the bottom of a
+           document that is still growing. That distinction is the whole fix: on the first
+           refresh the page is still short, so the clamped position looked like a successful
+           landing, we stopped, and then the content grew underneath us and left the view at the
+           top. Later refreshes hit warm caches, reached full height sooner, and happened to look
+           correct. Height must also be stable and the load finished. */
+        var atTarget = want === target && Math.abs(window.scrollY - want) < 2;
+        if (loaded && h === lastH && atTarget) steady++; else steady = 0;
+        lastH = h;
+        /* Give up 180 frames after the page has LOADED, not 180 frames after this started. The
+           old cap fired at roughly 3s whatever the document was doing, so a slow load that had
+           not yet reached full height was abandoned mid-grow and left near the top: the clamp had
+           nothing to clamp to yet. On a normal load nothing changes at all, because load fires
+           long before the cap and the behavior is identical. The absolute ceiling is the
+           backstop for a load event that never arrives. */
+        frames++;
+        if (steady >= 10 || (loaded && frames > 180) || frames > 600) { done(); return; }
+        requestAnimationFrame(restore);
+      }
+      requestAnimationFrame(restore);
+    })();
+  </script>
 </head>
 <body>
   <main>
