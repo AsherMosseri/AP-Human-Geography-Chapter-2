@@ -675,3 +675,12 @@ html[data-theme="dark"] .theme-toggle .i-dark { display: block; }
    to finish before hiding, and shows immediately on open. */
 .panel { visibility: hidden; transition: transform 0.2s ease, visibility 0s linear 0.2s; }
 .panel.open { visibility: visible; transition: transform 0.2s ease, visibility 0s linear 0s; }
+
+/* Subject card that isn't live yet */
+.card.card-soon { opacity: 0.6; }
+.card.card-soon h2 { margin-top: 0; margin-bottom: 4px; }
+.card.card-soon p { margin: 0; color: var(--muted); }
+/* Breadcrumbs wrap between items, never inside one ("Reading 2.1–2.2" stays whole) */
+.breadcrumbs a, .breadcrumbs .here { white-space: nowrap; }
+.breadcrumbs span:not(.here) { margin: 0 6px; }
+.breadcrumbs .here { margin: 0; }

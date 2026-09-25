@@ -1,18 +1,26 @@
-# AP Human Geography study site
+# Study Guides
 
-Static study site served by GitHub Pages from `main` at aphumangeo.thejunkdrawerapp.com.
-Work directly on `main`.
+Static study site for all subjects, served by GitHub Pages from `main` at
+study.thejunkdrawerapp.com. Work directly on `main`.
 
 ```
-/                          hub
-/quiz/                     reading-quiz study guides   e.g. /quiz/reading-2.1-2.2/
-/test/                     chapter-test study guides   e.g. /test/chapter-2/
-assets/style.css           one stylesheet for every page
-assets/notes.js            click-to-explain panel, chart tooltips, checklist
-assets/calc.js             natural increase calculator
-assets/js/turbo.min.js     Turbo Drive (copied from the main site)
-tools/version-assets.py    stamps ?v=<hash> on every local .css/.js link
+/                                   subject picker
+/human-geo/                         AP Human Geography hub
+/human-geo/quiz/                    reading-quiz study guides   e.g. /human-geo/quiz/reading-2.1-2.2/
+/human-geo/test/                    chapter-test study guides   e.g. /human-geo/test/chapter-2/
+/bio/                               Biology (planned; same quiz/ and test/ layout)
+/quiz/..., /test/...                redirect pages for the old addresses; keep them
+assets/style.css                    one stylesheet for every page
+assets/notes.js                     click-to-explain panel, chart tooltips, checklist
+assets/calc.js                      natural increase calculator
+assets/js/turbo.min.js              Turbo Drive (copied from the main site)
+tools/version-assets.py             stamps ?v=<hash> on every local .css/.js link
 ```
+
+**Adding a subject:** create `/<subject>/index.html` (copy `/human-geo/index.html`), give it
+`quiz/` and `test/` folders, and turn its card on the homepage into a link. Internal links are
+root-absolute (`/human-geo/quiz/`), so pages can move without breaking breadcrumbs. "Already read"
+(below) is tracked per subject.
 
 ## Content rules
 

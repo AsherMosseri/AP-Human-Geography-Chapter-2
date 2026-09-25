@@ -100,7 +100,15 @@
     if (!boxes.length) return;
     const key = "checklist:" + location.pathname;
     let saved = {};
-    try { saved = JSON.parse(localStorage.getItem(key)) || {}; } catch (err) { saved = {}; }
+    try {
+      saved = JSON.parse(localStorage.getItem(key)) || {};
+      // Pages moved from /quiz/... to /human-geo/quiz/...; carry ticks over from the old address once.
+      const legacy = "checklist:" + location.pathname.replace(/^\/[^/]+(?=\/(?:quiz|test)\/)/, "");
+      if (!Object.keys(saved).length && legacy !== key && localStorage.getItem(legacy)) {
+        saved = JSON.parse(localStorage.getItem(legacy)) || {};
+        localStorage.setItem(key, JSON.stringify(saved));
+      }
+    } catch (err) { saved = {}; }
     boxes.forEach(function (box) {
       if (box._bound) return;
       box._bound = true;

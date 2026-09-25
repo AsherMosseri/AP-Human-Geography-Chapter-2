@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Study Guides</title>
+  <title>Quizzes | AP Human Geography</title>
   <!-- Colors the browser's own chrome (Safari's toolbar, the iOS address bar) to match the page.
        Both tags are rewritten to the color actually in use by the script below and by the toggle,
        because older Safari ignores the media attribute and always takes the first tag. -->
@@ -118,24 +118,22 @@
 </head>
 <body>
   <header class="site-header">
+    <nav class="breadcrumbs">
+      <a href="/">Home</a><span>/</span><a href="/human-geo/">Human Geo</a><span>/</span><span class="here">Quizzes</span>
+    </nav>
     <button type="button" class="theme-toggle" id="themeToggle" hidden>
       <svg class="i-light" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="10" cy="10" r="3.9" /><path d="M10 1.5v2M10 16.5v2M18.5 10h-2M3.5 10h-2M15.96 4.04l-1.42 1.42M5.46 14.54l-1.42 1.42M15.96 15.96l-1.42-1.42M5.46 5.46 4.04 4.04" /></svg>
       <svg class="i-dark" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M16.9 12.6A7.4 7.4 0 0 1 7.4 3.1a7.4 7.4 0 1 0 9.5 9.5Z" /></svg>
     </button>
   </header>
   <main>
-    <h1>Study Guides</h1>
-    <p class="subtitle">Pick a subject</p>
+    <h1>Quizzes</h1>
+    <p class="subtitle">Study guides for the reading quizzes.</p>
 
-    <a class="card" href="/human-geo/">
-      <h2>AP Human Geography</h2>
-      <p>Reading quizzes and chapter tests.</p>
+    <a class="card" href="/human-geo/quiz/reading-2.1-2.2/">
+      <h2>Reading 2.1–2.2</h2>
+      <p>Chapter 2: Population distribution and population growth.</p>
     </a>
-
-    <div class="card card-soon" aria-disabled="true">
-      <h2>Biology</h2>
-      <p>Coming soon.</p>
-    </div>
   </main>
   <script>
     /* Theme toggle: system → light → dark → system. The pre-paint script in <head> is what
