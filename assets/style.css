@@ -553,3 +553,125 @@ html[data-theme="dark"] .theme-toggle .i-dark { display: block; }
   .calc-presets button:hover, .dtm-buttons button:hover { background: var(--card-hover); border-color: var(--accent); }
   .checklist label:hover { background: var(--card-hover); }
 }
+
+/* ---------- "Apply it" boxes (under charts and inside notes) ---------- */
+.apply {
+  margin: 14px 0 4px;
+  padding: 10px 14px;
+  border-left: 3px solid var(--series-2);
+  background: var(--term-bg);
+  border-radius: 0 6px 6px 0;
+}
+.apply .label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+.apply p { margin: 0; font-size: 0.93rem; }
+.panel-body .apply-p { border-left: 3px solid var(--series-2); padding-left: 10px; }
+.panel-body .note-src, .note-src { font-size: 0.8rem; color: var(--muted); margin-top: 10px; }
+
+/* ---------- SVG line chart (world population) ---------- */
+.svgchart svg { display: block; width: 100%; height: auto; }
+.svgchart .gridline { stroke: var(--grid-line); stroke-width: 1; }
+.svgchart .tick { fill: var(--muted); font-size: 12px; }
+.wp-line { fill: none; stroke: var(--series-1); stroke-width: 2.5; stroke-linejoin: round; }
+.wp-line.proj { stroke-dasharray: 5 5; }
+.wp-dot { fill: var(--series-1); stroke: var(--card); stroke-width: 2; }
+.wp-dot.proj { fill: var(--card); stroke: var(--series-1); stroke-width: 2; }
+.wp-label { fill: var(--text); font-size: 12px; font-weight: 600; }
+.svgchart .hit { fill: transparent; cursor: pointer; }
+.svgchart [data-note] { cursor: pointer; }
+.svgchart [data-note]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 480px) {
+  .svgchart .tick { font-size: 17px; }
+  .wp-label { font-size: 16px; }
+}
+
+/* ---------- Book pyramids (17 age groups) ---------- */
+.pyramid .prows { gap: 1px; }
+.pyramid .prow { height: 10px; }
+.pyramid .pbar { height: 8px; }
+.pyramid .page { font-size: 0.62rem; line-height: 1; }
+.paxis {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  color: var(--muted);
+  margin-top: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- DTM additions ---------- */
+.dtm-mark { fill: var(--series-2); stroke: var(--card); stroke-width: 2.5; pointer-events: none; }
+.dtm .hit { fill: transparent; cursor: pointer; }
+.dtm g[data-note]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.legend .dot-key::before { border-radius: 50%; }
+.dtm-buttons .cent { display: block; font-style: normal; font-size: 0.66rem; color: var(--muted); }
+@media (max-width: 480px) { .dtm-buttons .cent { display: none; } }
+
+/* ---------- Scatter: India's states ---------- */
+.scatter { position: relative; padding: 6px 10px 34px 46px; }
+.sc-plot {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border-left: 1px solid var(--muted);
+  border-bottom: 1px solid var(--muted);
+}
+.sc-y, .sc-x { position: absolute; pointer-events: none; }
+.sc-y { left: 0; right: 0; height: 0; border-top: 1px solid var(--grid-line); }
+.sc-x { top: 0; bottom: 0; width: 0; border-left: 1px solid var(--grid-line); }
+.sc-y em, .sc-x em { position: absolute; font-style: normal; font-size: 0.72rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.sc-y em { right: calc(100% + 6px); transform: translateY(-50%); }
+.sc-y:first-child em { transform: translateY(-50%); }
+.sc-x em { top: calc(100% + 4px); transform: translateX(-50%); white-space: nowrap; }
+.sc-dot {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  margin: 0 0 -6px -6px;
+  border-radius: 50%;
+  border: 2px solid var(--card);
+  cursor: pointer;
+  z-index: 1;
+}
+.sc-dot.s1 { background: var(--series-1); }
+.sc-dot.s2 { background: var(--series-2); }
+.sc-dot::after { content: ""; position: absolute; inset: -9px; }  /* bigger tap target */
+.sc-dot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (hover: hover) { .sc-dot:hover { transform: scale(1.35); z-index: 2; } }
+.sc-lbl {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.7rem;
+  color: var(--text);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.sc-lbl.lbl-r { left: 12px; }
+.sc-lbl.lbl-l { right: 12px; }
+.sc-ylab, .sc-xlab { position: absolute; margin: 0; font-size: 0.75rem; color: var(--muted); }
+.sc-xlab { bottom: 4px; right: 10px; }
+.sc-ylab { top: -2px; left: 46px; transform: translateY(-100%); }
+.sc-table { margin-top: 10px; font-size: 0.9rem; }
+.sc-table summary { cursor: pointer; color: var(--accent); }
+@media (max-width: 480px) {
+  .sc-plot { aspect-ratio: 4 / 3.4; }
+  .sc-lbl { font-size: 0.64rem; }
+}
+.sc-lbl.lbl-t, .sc-lbl.lbl-b { left: 50%; top: auto; transform: translateX(-50%); }
+.sc-lbl.lbl-t { bottom: 11px; }
+.sc-lbl.lbl-b { top: 11px; }
+.scatter { padding-top: 26px; }
+.sc-ylab { top: 4px; transform: none; }
+
+/* A closed panel is fully hidden (not just moved off-screen), so it can't peek in during
+   iOS rubber-band scrolling and can't be reached with Tab. visibility waits for the slide-out
+   to finish before hiding, and shows immediately on open. */
+.panel { visibility: hidden; transition: transform 0.2s ease, visibility 0s linear 0.2s; }
+.panel.open { visibility: visible; transition: transform 0.2s ease, visibility 0s linear 0s; }
