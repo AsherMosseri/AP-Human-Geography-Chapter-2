@@ -55,6 +55,15 @@ an "Apply it" section that uses an example from the reading to show the concept 
 
 ## Code rules
 
+- **Every page carries link-preview tags** (description, canonical, og:* and twitter:*) right after
+  `<title>`, with its own title, description and absolute `og:url`. `og:image` must be an absolute
+  https URL. Subject pages use `og-<subject>.png`; the homepage uses `og.png`. Redirect pages copy
+  their destination's tags so old links still preview.
+- **Preview images and icons are generated**, not drawn by hand:
+  `NODE_PATH=$(npm root -g) node tools/make-social-images.mjs && python3 tools/make-favicon.py`.
+  A new subject adds an entry there. Scrapers cache images for a long time, so a redesign ships
+  under a NEW filename (`og-2.png`), never a re-upload; icons likewise change by filename, not `?v=`.
+
 - **After editing anything in `assets/`, run `python3 tools/version-assets.py`.** Cloudflare and
   browsers cache CSS/JS for hours; the hash in `?v=` is what makes them fetch the new file.
 - **Asset paths are root-absolute (`/assets/...`)** so each `<head>` tag is identical on every page.
