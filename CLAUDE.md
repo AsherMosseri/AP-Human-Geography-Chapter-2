@@ -22,6 +22,15 @@ tools/version-assets.py             stamps ?v=<hash> on every local .css/.js lin
 root-absolute (`/human-geo/quiz/`), so pages can move without breaking breadcrumbs. "Already read"
 (below) is tracked per subject.
 
+## Commits
+
+- **Asher Mosseri is the author of every commit.** This repo's git config sets
+  `user.name "Asher Mosseri"` and `user.email asher@mosseri.org`; check it before committing.
+- **No `Co-Authored-By` trailers, and no `Claude-Session` or other tool attribution lines** in
+  commit messages or anywhere else in the repo.
+- Commit messages are sentence case and descriptive, with a body that explains *why* rather than
+  what. No conventional-commit prefixes.
+
 ## Content rules
 
 **Connect only to what has already been read.** Every "Connects to", "Apply it", AP tip and
