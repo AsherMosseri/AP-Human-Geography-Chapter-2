@@ -7,11 +7,14 @@ study.thejunkdrawerapp.com. Work directly on `main`.
 /                                   subject picker
 /human-geo/                         AP Human Geography hub
 /human-geo/quiz/                    reading-quiz study guides   e.g. /human-geo/quiz/reading-2.1-2.2/
+  <reading>/                        options page: Reading guide, Checklist, Practice quiz (soon)
+  <reading>/reading/                the guide itself
+  <reading>/checklist/              self-test: one question per quizzable fact
 /human-geo/test/                    chapter-test study guides   e.g. /human-geo/test/chapter-2/
 /bio/                               Biology (planned; same quiz/ and test/ layout)
 /quiz/..., /test/...                redirect pages for the old addresses; keep them
 assets/style.css                    one stylesheet for every page
-assets/notes.js                     click-to-explain panel, chart tooltips, checklist
+assets/notes.js                     click-to-explain panel, chart tooltips, checklist marks
 assets/calc.js                      natural increase calculator
 assets/js/turbo.min.js              Turbo Drive (copied from the main site)
 tools/version-assets.py             stamps ?v=<hash> on every local .css/.js link
@@ -55,8 +58,11 @@ Blij, Elsbeth Robson). Retell every fact in original wording, and describe book 
 cards with their page number instead of reproducing them. Free-licensed images (Wikimedia Commons,
 NASA) are fine with a credit.
 
-**Every fact from the reading stays in.** The teacher can quiz on anything, so each section ends
-with a checklist covering every quizzable fact. Out-of-date numbers keep the book's figure and add
+**Every fact from the reading stays in.** The teacher can quiz on anything, so every reading gets
+a checklist page with one question per quizzable fact, grouped by the guide's sections, each
+answer linking to its heading in the guide (`reading/#id`). The guide ends each part with a
+"Check yourself" link to it. Question ids are stable: marks are saved under them, so reword a
+question freely but don't rename its id. Out-of-date numbers keep the book's figure and add
 an "Update" box; book errors get a short note saying which value to use on the quiz.
 
 **Apply it.** Every chart has an "Apply it" box and every key-concept note (`class="term key"`) has

@@ -352,12 +352,6 @@ footer { margin-top: 32px; color: var(--muted); font-size: 0.9rem; }
   }
 }
 
-/* Quiz checklist */
-.checklist { list-style: none; padding: 0; }
-.checklist li { margin: 6px 0; }
-.checklist label { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
-.checklist input { margin-top: 5px; flex-shrink: 0; }
-.checklist input:checked + span { color: var(--muted); text-decoration: line-through; }
 
 /* Visually hidden, still read by screen readers (chart data tables) */
 .sr-only {
@@ -537,12 +531,11 @@ html[data-theme="dark"] .theme-toggle .i-dark { display: block; }
 .panel-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .panel-close:active { background: var(--term-bg-hover); }
 
-.figure-card, .cluster, .pyramid, .calc-presets button, .dtm-buttons button, .checklist label, a.card, .bar-row[data-note] {
+.figure-card, .cluster, .pyramid, .calc-presets button, .dtm-buttons button, a.card, .bar-row[data-note] {
   transition: background-color .15s ease, border-color .15s ease, color .15s ease;
 }
 .figure-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .calc-presets button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
-.checklist label { border-radius: 6px; padding: 2px 6px; margin: 0 -6px; }
 
 .figure-card:active, .cluster:active, .pyramid:active,
 .calc-presets button:active, .dtm-buttons button:active { background: var(--term-bg-hover); }
@@ -551,7 +544,6 @@ html[data-theme="dark"] .theme-toggle .i-dark { display: block; }
   .panel-close:hover { color: var(--text); background: var(--card-hover); }
   .figure-card:hover, .cluster:hover, .pyramid:hover,
   .calc-presets button:hover, .dtm-buttons button:hover { background: var(--card-hover); border-color: var(--accent); }
-  .checklist label:hover { background: var(--card-hover); }
 }
 
 /* ---------- "Apply it" boxes (under charts and inside notes) ---------- */
@@ -681,6 +673,156 @@ html[data-theme="dark"] .theme-toggle .i-dark { display: block; }
 .card.card-soon h2 { margin-top: 0; margin-bottom: 4px; }
 .card.card-soon p { margin: 0; color: var(--muted); }
 /* Breadcrumbs wrap between items, never inside one ("Reading 2.1–2.2" stays whole) */
+.breadcrumbs { display: flex; flex-wrap: wrap; align-items: baseline; row-gap: 2px; min-width: 0; }
 .breadcrumbs a, .breadcrumbs .here { white-space: nowrap; }
 .breadcrumbs span:not(.here) { margin: 0 6px; }
 .breadcrumbs .here { margin: 0; }
+
+/* ---------- Checklist page: answer, reveal, mark ---------- */
+:root {
+  --good: #1a7f37;
+  --good-bg: rgba(26, 127, 55, 0.1);
+  --review: #bc4c00;
+  --review-bg: rgba(188, 76, 0, 0.1);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --good: #3fb950;
+    --good-bg: rgba(63, 185, 80, 0.14);
+    --review: #db6d28;
+    --review-bg: rgba(219, 109, 40, 0.16);
+  }
+}
+:root[data-theme="dark"] {
+  --good: #3fb950;
+  --good-bg: rgba(63, 185, 80, 0.14);
+  --review: #db6d28;
+  --review-bg: rgba(219, 109, 40, 0.16);
+}
+
+.ck-summary {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--bg);
+  padding: 10px 0 12px;
+  margin: 0 0 12px;
+  border-bottom: 1px solid var(--border);
+}
+.ck-meter { display: flex; height: 8px; border-radius: 999px; overflow: hidden; background: var(--grid-line); }
+.ck-meter span { width: 0; transition: width 0.25s ease; }
+.ck-meter .m-got { background: var(--good); }
+.ck-meter .m-review { background: var(--review); }
+.ck-counts { margin: 6px 0 8px; font-size: 0.9rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.ck-counts strong { color: var(--text); }
+.ck-counts .c-got strong { color: var(--good); }
+.ck-counts .c-review strong { color: var(--review); }
+/* Only the meter, counts and filters stay pinned; the tools scroll away to keep the bar short on phones. */
+.ck-filters, .ck-tools { display: flex; flex-wrap: wrap; gap: 6px; }
+.ck-tools { justify-content: flex-end; margin: 0 0 8px; }
+.ck-page .ck-sec:first-of-type h2 { border-top: 0; margin-top: 16px; padding-top: 0; }
+
+.ck-chip, .ck-mark {
+  font: inherit;
+  font-size: 0.85rem;
+  line-height: 1.3;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+.ck-chip[aria-pressed="true"] { background: var(--term-bg); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.ck-mark { padding: 6px 16px; font-size: 0.9rem; }
+.ck-mark[data-mark="got"][aria-pressed="true"] { background: var(--good-bg); border-color: var(--good); color: var(--good); font-weight: 600; }
+.ck-mark[data-mark="review"][aria-pressed="true"] { background: var(--review-bg); border-color: var(--review); color: var(--review); font-weight: 600; }
+
+.ck-empty { color: var(--muted); font-style: italic; margin: 24px 0; }
+.ck-sec { scroll-margin-top: 100px; }
+.ck-sec-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 12px;
+  margin: 0 0 4px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.cklist { list-style: none; padding: 0; margin: 8px 0 0; }
+.ck {
+  margin: 8px 0;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--border);
+  border-radius: 8px;
+}
+.ck.is-got { border-left-color: var(--good); }
+.ck.is-review { border-left-color: var(--review); }
+.ck-q {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-radius: 0 7px 7px 0;
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+.ck-text { flex: 1; }
+.ck-tag { flex: none; font-size: 0.78rem; font-weight: 600; margin-top: 3px; }
+.ck-tag:empty { display: none; }
+.ck.is-got .ck-tag { color: var(--good); }
+.ck.is-review .ck-tag { color: var(--review); }
+.ck-q::after {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin: 8px 2px 0 0;
+  border-right: 2px solid var(--muted);
+  border-bottom: 2px solid var(--muted);
+  transform: rotate(45deg);
+  transition: transform .15s ease;
+}
+.ck-q[aria-expanded="true"]::after { transform: rotate(-135deg); margin-top: 11px; }
+.ck-a { padding: 0 14px 12px; }
+.ck-a p { margin: 0 0 10px; padding-top: 10px; border-top: 1px dashed var(--border); }
+.ck-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.ck-link { margin-left: auto; font-size: 0.9rem; }
+
+.ck-q:focus-visible, .ck-chip:focus-visible, .ck-mark:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.ck-q:active, .ck-chip:active, .ck-mark:active { background: var(--term-bg-hover); }
+@media (hover: hover) {
+  .ck-q:hover { background: var(--card-hover); }
+  .ck-chip:hover, .ck-mark:hover { border-color: var(--accent); }
+}
+
+/* Options-page card progress, and the "Check yourself" links at the end of each reading section */
+a.card p.card-progress { margin-top: 6px; font-size: 0.9rem; font-weight: 600; color: var(--good); }
+.check-cta {
+  display: block;
+  margin: 32px 0 8px;
+  padding: 14px 18px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: var(--term-bg);
+  color: inherit;
+  text-decoration: none;
+  transition: background-color .15s ease;
+}
+.check-cta .cta-title { display: block; font-weight: 700; color: var(--accent); }
+.check-cta .cta-title::after { content: " →"; }
+.check-cta .cta-sub { display: block; font-size: 0.9rem; color: var(--muted); }
+.check-cta:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.check-cta:active { background: var(--term-bg-hover); }
+@media (hover: hover) { .check-cta:hover { background: var(--term-bg-hover); } }
+
+/* Reading-guide headings are link targets from the checklist */
+.guide main h2[id], .guide main h3[id] { scroll-margin-top: 16px; }

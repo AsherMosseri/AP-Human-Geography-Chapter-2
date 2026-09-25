@@ -94,33 +94,160 @@
     if (tip) tip.classList.remove("show");
   });
 
-  // Checklist: remember ticked boxes in this browser only. Runs per page.
-  function setupChecklist() {
-    const boxes = document.querySelectorAll(".checklist input[type=checkbox]");
-    if (!boxes.length) return;
-    const key = "checklist:" + location.pathname;
-    let saved = {};
-    try {
-      saved = JSON.parse(localStorage.getItem(key)) || {};
-      // Pages moved from /quiz/... to /human-geo/quiz/...; carry ticks over from the old address once.
-      const legacy = "checklist:" + location.pathname.replace(/^\/[^/]+(?=\/(?:quiz|test)\/)/, "");
-      if (!Object.keys(saved).length && legacy !== key && localStorage.getItem(legacy)) {
-        saved = JSON.parse(localStorage.getItem(legacy)) || {};
-        localStorage.setItem(key, JSON.stringify(saved));
-      }
-    } catch (err) { saved = {}; }
-    boxes.forEach(function (box) {
-      if (box._bound) return;
-      box._bound = true;
-      box.checked = !!saved[box.id];
-      box.addEventListener("change", function () {
-        saved[box.id] = box.checked;
-        try { localStorage.setItem(key, JSON.stringify(saved)); } catch (err) { /* storage unavailable */ }
+  // Checklist: questions you answer in your head, reveal, then mark "got" or "review".
+  // Marks live in this browser only, under the key in the page's data-store. Clicks are
+  // delegated from the document, so a page restored by Back/Forward needs no re-binding;
+  // render() just redraws from storage on every load.
+  function load(key) {
+    try { return JSON.parse(localStorage.getItem(key)) || {}; } catch (err) { return {}; }
+  }
+  function save(key, marks) {
+    try { localStorage.setItem(key, JSON.stringify(marks)); } catch (err) { /* storage unavailable */ }
+  }
+
+  // One-time carry-over from the old tick-box lists (data-legacy names their keys): a ticked
+  // box marks every question that grew out of it as "got". Skipped once the new key exists,
+  // which is why "Start over" saves {} rather than removing the key.
+  function migrate(page) {
+    const key = page.dataset.store;
+    try { if (localStorage.getItem(key) !== null) return; } catch (err) { return; }
+    const ticked = {};
+    (page.dataset.legacy || "").split(/\s+/).filter(Boolean).forEach(function (k) {
+      const old = load(k);
+      Object.keys(old).forEach(function (id) { if (old[id]) ticked[id] = true; });
+    });
+    if (!Object.keys(ticked).length) return;
+    const marks = {};
+    page.querySelectorAll(".ck[data-legacy]").forEach(function (q) {
+      if (ticked[q.dataset.legacy]) marks[q.id] = "got";
+    });
+    save(key, marks);
+  }
+
+  const EMPTY = {
+    none: "You've marked every question. Switch to To review to go over the ones you missed.",
+    review: "Nothing to review. Mark a question Review and it shows up here.",
+    got: "Nothing marked Got it yet.",
+  };
+
+  function render(page) {
+    const marks = load(page.dataset.store);
+    const filter = page.dataset.show || "all";
+    const counts = { got: 0, review: 0, none: 0 };
+    let shown = 0;
+    page.querySelectorAll(".ck-sec").forEach(function (sec) {
+      let secShown = 0, secGot = 0;
+      const qs = sec.querySelectorAll(".ck");
+      qs.forEach(function (q) {
+        const m = marks[q.id] === "got" || marks[q.id] === "review" ? marks[q.id] : "none";
+        counts[m]++;
+        if (m === "got") secGot++;
+        q.classList.toggle("is-got", m === "got");
+        q.classList.toggle("is-review", m === "review");
+        q.querySelector(".ck-tag").textContent = m === "got" ? "Got it" : m === "review" ? "Review" : "";
+        q.querySelectorAll(".ck-mark").forEach(function (b) {
+          b.setAttribute("aria-pressed", String(b.dataset.mark === m));
+        });
+        q.hidden = !(filter === "all" || filter === m);
+        if (!q.hidden) secShown++;
       });
+      sec.hidden = !secShown;
+      shown += secShown;
+      sec.querySelector(".ck-sec-count").textContent = secGot + " of " + qs.length + " got it";
+    });
+    const total = counts.got + counts.review + counts.none;
+    page.querySelectorAll("[data-count]").forEach(function (el) { el.textContent = counts[el.dataset.count]; });
+    page.querySelector(".m-got").style.width = (100 * counts.got / total) + "%";
+    page.querySelector(".m-review").style.width = (100 * counts.review / total) + "%";
+    page.querySelectorAll("[data-filter]").forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.dataset.filter === filter));
+    });
+    const empty = page.querySelector(".ck-empty");
+    empty.hidden = shown > 0;
+    empty.textContent = shown ? "" : EMPTY[filter] || "";
+  }
+
+  function openAnswer(q, open) {
+    q.querySelector(".ck-a").hidden = !open;
+    q.querySelector(".ck-q").setAttribute("aria-expanded", String(open));
+  }
+
+  document.addEventListener("click", function (e) {
+    const page = e.target.closest && e.target.closest(".ck-page");
+    if (!page) return;
+    const key = page.dataset.store;
+
+    const qBtn = e.target.closest(".ck-q");
+    if (qBtn) {
+      const q = qBtn.closest(".ck");
+      openAnswer(q, q.querySelector(".ck-a").hidden);
+      return;
+    }
+
+    const mark = e.target.closest(".ck-mark");
+    if (mark) {
+      const q = mark.closest(".ck");
+      const marks = load(key);
+      // Pressing the mark a question already has clears it.
+      if (marks[q.id] === mark.dataset.mark) delete marks[q.id];
+      else marks[q.id] = mark.dataset.mark;
+      save(key, marks);
+      if (page.dataset.reveal !== "1") openAnswer(q, false);
+      const list = Array.prototype.slice.call(page.querySelectorAll(".ck"));
+      render(page);
+      // If the filter just hid this question, hand focus to the next one still showing, so a
+      // keyboard user can work straight down the list.
+      const target = q.hidden ? list.slice(list.indexOf(q) + 1).find(function (n) { return !n.hidden; }) : q;
+      if (target) target.querySelector(".ck-q").focus({ preventScroll: !q.hidden });
+      return;
+    }
+
+    const f = e.target.closest("[data-filter]");
+    if (f) {
+      page.dataset.show = f.dataset.filter;
+      render(page);
+      return;
+    }
+
+    const tool = e.target.closest("[data-ck]");
+    if (!tool) return;
+    if (tool.dataset.ck === "reveal") {
+      const on = page.dataset.reveal !== "1";
+      page.dataset.reveal = on ? "1" : "";
+      tool.setAttribute("aria-pressed", String(on));
+      tool.textContent = on ? "Hide answers" : "Show answers";
+      page.querySelectorAll(".ck").forEach(function (q) { openAnswer(q, on); });
+    } else if (tool.dataset.ck === "reset") {
+      if (!window.confirm("Clear all your marks on this checklist?")) return;
+      save(key, {});
+      page.dataset.show = "all";
+      render(page);
+    }
+  });
+
+  // Progress line on an options-page card: "12 of 109 got it · 5 to review".
+  function progress() {
+    document.querySelectorAll("[data-progress]").forEach(function (el) {
+      const marks = load(el.dataset.progress);
+      let got = 0, review = 0;
+      Object.keys(marks).forEach(function (id) {
+        if (marks[id] === "got") got++;
+        else if (marks[id] === "review") review++;
+      });
+      el.hidden = !(got || review);
+      el.textContent = got + " of " + el.dataset.total + " got it" + (review ? " · " + review + " to review" : "");
     });
   }
 
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", setupChecklist);
-  else setupChecklist();
-  document.addEventListener("turbo:load", setupChecklist);
+  function setupPage() {
+    document.querySelectorAll(".ck-page").forEach(function (page) {
+      migrate(page);
+      render(page);
+    });
+    progress();
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", setupPage);
+  else setupPage();
+  document.addEventListener("turbo:load", setupPage);
 })();
