@@ -50,11 +50,11 @@ const IMAGES = [
     </div>
     <div class="art">${bars}</div>
     <div class="url">study.thejunkdrawerapp.com</div>` },
-  { file: 'og-human-geo-2.png', html: `
+  { file: 'og-human-geo-3.png', html: `
     <div class="wrap">
       <div class="kicker">Study Guides</div>
       <h1>AP Human Geography</h1>
-      <p>Reading quizzes and chapter tests, with charts built from the book's data.</p>
+      <p>Reading quizzes and chapter tests, with interactive charts and tap-to-explain notes.</p>
       <div class="chips"><span class="chip on">Quizzes</span><span class="chip soon">Tests · soon</span></div>
     </div>
     <div class="art pyr">${pyramid}</div>

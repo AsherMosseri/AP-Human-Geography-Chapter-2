@@ -43,12 +43,12 @@ added, widen "already read" to include it for pages that come after it, never be
 
 **Charts use the book's data.** Numbers come from the reading's text and figures. When a figure's
 values are not printed, measure them from the figure (the pyramids were measured from bar lengths)
-or use the dataset the figure cites and confirm it lands in the same bins. Say which figure each
-chart comes from. Conceptual models (the DTM) are drawn fresh but pinned to the book's numbers.
-Don't label individual charts as "mine, not the book's" or similar. Each page's intro box carries
-one positive line instead: every chart was built for this guide from the book's own numbers and
-figures. Per-chart notes stick to sourcing ("measured from Fig. 2.15", "built from the book's
-figure").
+or use the dataset the figure cites and confirm it lands in the same bins. Don't tag charts or
+notes with where things came from ("(book)", "the book's figures", "measured from...", "Source:
+..."): each page's intro box says once, positively, that every chart was built for this guide from
+the book's own numbers and figures, and that covers it. Keep figure and page numbers (Fig. 2.15,
+p. 25) because they help find things in the PDF, and keep "the book says X; use X on the quiz"
+wherever newer data or a book error could cause confusion.
 
 **Never copy the textbook.** The reading and its photos and maps are copyrighted (Wiley, H. J. de
 Blij, Elsbeth Robson). Retell every fact in original wording, and describe book figures in figure
