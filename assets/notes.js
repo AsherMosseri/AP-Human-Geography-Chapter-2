@@ -30,6 +30,9 @@
     p.querySelector(".panel-close").focus({ preventScroll: true });
   }
 
+  // Other scripts (the flashcards' "Explain it") open a note by id through this.
+  window.siteNote = openNote;
+
   function closeNote(restoreFocus) {
     const p = panel();
     if (!p || !p.classList.contains("open")) return;

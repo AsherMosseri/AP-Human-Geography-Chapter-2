@@ -1,10 +1,16 @@
 // Flashcards: one card at a time. Tap (or Space) flips it; swipe or press → / ← to sort it into
-// "Got it" or "Review". Marks live in this browser only, under the key in the page's data-store,
-// so the options page can show progress too.
+// "Got it" or "Review"; "Explain it" (or E) opens the reading guide's own note on that fact.
 //
-// Turbo: listeners are added once on the document, and a page restored by Back/Forward is a
-// clone, so the deck's position is kept in data-state (an attribute survives the clone; a JS
-// property would not) and redrawn on every turbo:load.
+// Storage, all in this browser only:
+//   data-store  (localStorage)   each card's last mark, "got" or "review"; the options page
+//                                reads it for its progress line
+//   data-srs    (localStorage)   spaced repetition: each card's box and when it's next due
+//   "fcdeck:" + store (sessionStorage)   the deck in progress, so leaving for the reading and
+//                                coming back lands on the same card, flipped the same way
+//
+// Turbo: listeners are added once on the document. A page restored by Back/Forward is a clone,
+// so the deck also lives in data-state (an attribute survives the clone; a JS property would
+// not), and everything is redrawn on every turbo:load.
 
 (function () {
   if (window.__fcInit) return;
@@ -14,17 +20,23 @@
   const THROW = "cubic-bezier(.45,0,.8,.3)";
   const SPRING = "cubic-bezier(.2,1.5,.4,1)";
 
+  // Spaced repetition (Leitner boxes). "Got it" moves a card up a box and schedules it that many
+  // days out; "Review" drops it to box 0 and brings it back REQUEUE_GAP cards later this session.
+  const DAY = 24 * 60 * 60 * 1000;
+  const BOX_DAYS = [0, 1, 3, 7, 14, 30];
+  const REQUEUE_GAP = 4;
+
   function calm() { return window.matchMedia("(prefers-reduced-motion: reduce)").matches; }
   function play(el, frames, ms, easing) {
     if (!el.animate) return null;
     return el.animate(frames, { duration: calm() ? 0 : ms, easing: easing });
   }
 
-  function load(key) {
-    try { return JSON.parse(localStorage.getItem(key)) || {}; } catch (err) { return {}; }
+  function load(key, store) {
+    try { return JSON.parse((store || localStorage).getItem(key)) || {}; } catch (err) { return {}; }
   }
-  function save(key, marks) {
-    try { localStorage.setItem(key, JSON.stringify(marks)); } catch (err) { /* storage unavailable */ }
+  function save(key, value, store) {
+    try { (store || localStorage).setItem(key, JSON.stringify(value)); } catch (err) { /* storage unavailable */ }
   }
 
   // One-time carry-over from the old tick-box lists (data-legacy names their keys): a ticked
@@ -32,7 +44,19 @@
   // is why "Clear all marks" saves {} rather than removing the key.
   function migrate(page) {
     const key = page.dataset.store;
-    try { if (localStorage.getItem(key) !== null) return; } catch (err) { return; }
+    try { if (localStorage.getItem(key) === null) migrateTicks(page, key); } catch (err) { return; }
+    // Cards marked before spaced repetition existed get a schedule: known ones are due
+    // tomorrow, ones to review are due now.
+    const marks = load(key), srs = load(page.dataset.srs);
+    let changed = false;
+    Object.keys(marks).forEach(function (id) {
+      if (srs[id]) return;
+      srs[id] = marks[id] === "got" ? { b: 1, d: Date.now() + DAY } : { b: 0, d: 0 };
+      changed = true;
+    });
+    if (changed) save(page.dataset.srs, srs);
+  }
+  function migrateTicks(page, key) {
     const ticked = {};
     (page.dataset.legacy || "").split(/\s+/).filter(Boolean).forEach(function (k) {
       const old = load(k);
@@ -46,17 +70,35 @@
     save(key, marks);
   }
 
+  function isDue(srs, id, now) { return !srs[id] || srs[id].d <= now; }
+
   function getState(page) {
     try { return JSON.parse(page.dataset.state || "null"); } catch (err) { return null; }
   }
-  function setState(page, s) { page.dataset.state = JSON.stringify(s); }
+  function setState(page, s) {
+    page.dataset.state = JSON.stringify(s);
+    save("fcdeck:" + page.dataset.store, s, sessionStorage);
+  }
+  function savedDeck(page) {
+    const s = load("fcdeck:" + page.dataset.store, sessionStorage);
+    return s.order ? s : null;
+  }
 
   function inSection(it, section) {
     if (!section) return true;
     const sec = it.closest("[data-sec]");
     return sec.dataset.sec === section || sec.dataset.part === section;
   }
+  function inFocus(it, focus) { return !focus || focus === "all" || it.dataset.focus === focus; }
   function markOf(marks, id) { return marks[id] === "got" || marks[id] === "review" ? marks[id] : "none"; }
+
+  // Press one button of a group and release the others.
+  function pick(page, selector, value) {
+    page.querySelectorAll(selector).forEach(function (b) {
+      const v = b.dataset.deck || b.dataset.focusPick;
+      b.setAttribute("aria-pressed", String(v === value));
+    });
+  }
 
   // Read the controls into options, or write options back into them.
   function readOpts(page) {
@@ -65,7 +107,7 @@
     return {
       section: page.querySelector(".fc-section").value,
       focus: focus ? focus.dataset.focusPick : "all",
-      deck: deck ? deck.dataset.deck : "all",
+      deck: deck ? deck.dataset.deck : "due",
       shuffle: page.querySelector("[data-fc='shuffle']").getAttribute("aria-pressed") === "true",
     };
   }
@@ -73,36 +115,36 @@
     const sel = page.querySelector(".fc-section");
     sel.value = o.section;
     if (sel.value !== o.section) sel.value = "";
-    page.querySelectorAll("[data-deck]").forEach(function (b) {
-      b.setAttribute("aria-pressed", String(b.dataset.deck === o.deck));
-    });
+    pick(page, "[data-deck]", o.deck || "due");
     pick(page, "[data-focus-pick]", o.focus || "all");
-    page.querySelector("[data-fc='shuffle']").setAttribute("aria-pressed", String(o.shuffle));
+    page.querySelector("[data-fc='shuffle']").setAttribute("aria-pressed", String(!!o.shuffle));
   }
 
-  // Press one button of a group ("all", "ap", "detail"...) and release the others.
-  function pick(page, selector, value) {
-    page.querySelectorAll(selector).forEach(function (b) {
-      const v = b.dataset.deck || b.dataset.focusPick;
-      b.setAttribute("aria-pressed", String(v === value));
-    });
+  function shuffle(list) {
+    for (let i = list.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const t = list[i]; list[i] = list[j]; list[j] = t;
+    }
+    return list;
   }
-  function inFocus(it, focus) { return !focus || focus === "all" || it.dataset.focus === focus; }
 
   function build(page) {
     const o = readOpts(page);
     const marks = load(page.dataset.store);
-    const order = [];
+    const srs = load(page.dataset.srs);
+    const now = Date.now();
+    let seen = [], fresh = [];
     page.querySelectorAll(".fc-item").forEach(function (it) {
-      if (inSection(it, o.section) && inFocus(it, o.focus) && (o.deck === "all" || o.deck === markOf(marks, it.id))) order.push(it.id);
-    });
-    if (o.shuffle) {
-      for (let i = order.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        const t = order[i]; order[i] = order[j]; order[j] = t;
+      if (!inSection(it, o.section) || !inFocus(it, o.focus)) return;
+      if (o.deck === "due") {
+        if (isDue(srs, it.id, now)) (srs[it.id] ? seen : fresh).push(it.id);
+      } else if (o.deck === "all" || o.deck === markOf(marks, it.id)) {
+        seen.push(it.id);
       }
-    }
-    const s = { opts: o, order: order, index: 0, flipped: false, history: [], got: 0, review: 0 };
+    });
+    // The Due deck goes over cards you've seen before (the ones slipping away) before new ones.
+    if (o.shuffle) { shuffle(seen); shuffle(fresh); }
+    const s = { opts: o, order: seen.concat(fresh), index: 0, flipped: false, history: [], got: 0, review: 0 };
     setState(page, s);
     return s;
   }
@@ -115,6 +157,20 @@
     if (!animate) { void card.offsetWidth; card.classList.remove("no-anim"); }
   }
 
+  // "in 5 hours", "tomorrow", "in 3 days"
+  function whenText(ms) {
+    const h = Math.max(1, Math.round(ms / 3600000));
+    if (h < 20) return "in " + h + (h === 1 ? " hour" : " hours");
+    const d = Math.round(ms / DAY);
+    return d <= 1 ? "tomorrow" : "in " + d + " days";
+  }
+
+  // Link to the card's spot in the reading, marked so the reading shows "Back to flashcards".
+  function readingHref(href) {
+    const i = href.indexOf("#");
+    return i < 0 ? href + "?from=flashcards" : href.slice(0, i) + "?from=flashcards" + href.slice(i);
+  }
+
   // Draw the page from the state: the current card, progress, counts and the end screen.
   function draw(page, s) {
     const card = page.querySelector(".fc-card");
@@ -123,6 +179,8 @@
     const finished = s.index >= total;
     const left = total - s.index;
     const marks = load(page.dataset.store);
+    const srs = load(page.dataset.srs);
+    const now = Date.now();
 
     card.hidden = finished;
     card.style.transform = "";
@@ -141,23 +199,28 @@
       kind.className = "fc-kind " + it.dataset.focus;
       card.querySelector(".fc-q").innerHTML = it.querySelector(".q").innerHTML;
       card.querySelector(".fc-a").innerHTML = it.querySelector(".a").innerHTML;
-      card.querySelector(".fc-link").href = it.dataset.href;
+      card.querySelector(".fc-link").href = readingHref(it.dataset.href);
+      card.querySelector(".fc-explain").hidden = !it.dataset.notes;
       const m = markOf(marks, it.id);
       const tag = card.querySelector(".fc-was");
-      tag.textContent = m === "got" ? "Got it before" : m === "review" ? "Marked review" : "";
+      tag.textContent = m === "got" ? "Got it before" : m === "review" ? "Marked review" : "New";
       tag.className = "fc-was " + m;
       setFlipped(card, s.flipped, false);
     }
 
-    // Counts for the current section: the focus buttons count every card in it, the deck
+    // Counts for the current section: the focus buttons count every card in it; the deck
     // chips and the tally count the cards in the chosen focus.
-    const counts = { got: 0, review: 0, none: 0 };
+    const counts = { got: 0, review: 0, none: 0, due: 0 };
     const kinds = { all: 0, ap: 0, detail: 0 };
+    let nextDue = Infinity;
     page.querySelectorAll(".fc-item").forEach(function (it) {
       if (!inSection(it, s.opts.section)) return;
       kinds.all++;
       kinds[it.dataset.focus]++;
-      if (inFocus(it, s.opts.focus)) counts[markOf(marks, it.id)]++;
+      if (!inFocus(it, s.opts.focus)) return;
+      counts[markOf(marks, it.id)]++;
+      if (isDue(srs, it.id, now)) counts.due++;
+      else nextDue = Math.min(nextDue, srs[it.id].d);
     });
     page.querySelectorAll("[data-focus-pick] .n").forEach(function (n) {
       n.textContent = kinds[n.closest("[data-focus-pick]").dataset.focusPick];
@@ -177,18 +240,23 @@
     if (finished) {
       const title = done.querySelector(".fc-done-title");
       const text = done.querySelector(".fc-done-text");
-      const missed = done.querySelector("[data-fc='missed']");
-      if (!total) {
+      const later = nextDue < Infinity ? " The next card is due " + whenText(nextDue - now) + "." : "";
+      if (!total && s.opts.deck === "due") {
+        title.textContent = "All caught up";
+        text.textContent = "Nothing is due right now." + later;
+      } else if (!total) {
         title.textContent = "No cards here";
         text.textContent = s.opts.deck === "review" ? "Nothing to review in these cards. Nice work."
           : s.opts.deck === "none" ? "You've marked every one of these cards." : "";
       } else {
         title.textContent = "Deck done";
-        text.textContent = "This round: " + s.got + " got it, " + s.review + " to review.";
+        text.textContent = "This round: " + s.got + " got it, " + s.review + " to review." + (s.opts.deck === "due" ? later : "");
       }
+      const missed = done.querySelector("[data-fc='missed']");
       missed.hidden = !counts.review;
       missed.textContent = "Go over the " + counts.review + " to review";
-      done.querySelector("[data-fc='restart']").hidden = !total;
+      done.querySelector("[data-fc='restart']").hidden = !total || s.opts.deck === "due";
+      done.querySelector("[data-fc='studyall']").hidden = s.opts.deck !== "due";
     }
   }
 
@@ -232,9 +300,23 @@
     if (!s || s.index >= s.order.length) return;
     const id = s.order[s.index];
     const marks = load(page.dataset.store);
-    s.history.push({ id: id, prev: marks[id] || null, kind: kind });
+    const srs = load(page.dataset.srs);
+    const entry = { id: id, prev: marks[id] || null, prevSrs: srs[id] || null, kind: kind, requeued: -1 };
+
     marks[id] = kind;
+    if (kind === "got") {
+      const b = Math.min((srs[id] ? srs[id].b : 0) + 1, BOX_DAYS.length - 1);
+      srs[id] = { b: b, d: Date.now() + BOX_DAYS[b] * DAY };
+    } else {
+      srs[id] = { b: 0, d: 0 };
+      // Bring it back a few cards from now, while it's still fresh.
+      const at = Math.min(s.index + 1 + REQUEUE_GAP, s.order.length);
+      s.order.splice(at, 0, id);
+      entry.requeued = at;
+    }
     save(page.dataset.store, marks);
+    save(page.dataset.srs, srs);
+    s.history.push(entry);
     s[kind]++;
     s.index++;
     s.flipped = false;
@@ -252,8 +334,12 @@
     const h = s && s.history.pop();
     if (!h) return;
     const marks = load(page.dataset.store);
+    const srs = load(page.dataset.srs);
     if (h.prev) marks[h.id] = h.prev; else delete marks[h.id];
+    if (h.prevSrs) srs[h.id] = h.prevSrs; else delete srs[h.id];
     save(page.dataset.store, marks);
+    save(page.dataset.srs, srs);
+    if (h.requeued >= 0 && s.order[h.requeued] === h.id) s.order.splice(h.requeued, 1);
     s[h.kind]--;
     s.index--;
     s.flipped = false;
@@ -280,12 +366,69 @@
     rise(page);
   }
 
+  // ---------- "Explain it": the reading guide's own notes ----------
+  // The notes live in the guide page as <template id="note-...">. Fetch that page once, copy the
+  // card's notes into one template on this page, and open it in the same panel the guide uses.
+  const guides = {};
+  function guideDoc(url) {
+    if (!guides[url]) {
+      guides[url] = fetch(url)
+        .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+        .then(function (t) { return new DOMParser().parseFromString(t, "text/html"); })
+        .catch(function (err) { delete guides[url]; throw err; });
+    }
+    return guides[url];
+  }
+
+  function explain(page, trigger) {
+    const s = getState(page);
+    if (!s || s.index >= s.order.length || !window.siteNote) return;
+    const id = s.order[s.index];
+    const ids = (document.getElementById(id).dataset.notes || "").split(/\s+/).filter(Boolean);
+    if (!ids.length) return;
+    if (document.getElementById("note-fc-" + id)) { window.siteNote("fc-" + id, trigger); return; }
+    trigger.setAttribute("aria-busy", "true");
+    guideDoc(page.dataset.notesFrom).then(function (doc) {
+      const tpl = document.createElement("template");
+      tpl.id = "note-fc-" + id;
+      ids.forEach(function (n, i) {
+        const src = doc.getElementById("note-" + n);
+        if (!src) return;
+        if (!tpl.dataset.title) tpl.dataset.title = src.dataset.title;
+        if (i > 0) {
+          const h = document.createElement("p");
+          h.className = "note-also";
+          h.textContent = "Also: " + src.dataset.title;
+          tpl.content.appendChild(h);
+        }
+        tpl.content.appendChild(document.importNode(src.content, true));
+      });
+      page.appendChild(tpl);   // inside <main>, so it leaves with the page on the next visit
+      window.siteNote("fc-" + id, trigger);
+    }).catch(function () {
+      let tpl = document.getElementById("note-fc-offline");
+      if (!tpl) {
+        tpl = document.createElement("template");
+        tpl.id = "note-fc-offline";
+        tpl.dataset.title = "Couldn't load the explanation";
+        tpl.innerHTML = "<p>Check your connection and try again, or use <strong>In the reading</strong> on the card.</p>";
+        page.appendChild(tpl);
+      }
+      window.siteNote("fc-offline", trigger);
+    }).then(function () { trigger.removeAttribute("aria-busy"); });
+  }
+
+  function panelOpen() {
+    const p = document.getElementById("panel");
+    return !!(p && p.classList.contains("open"));
+  }
+
   // ---------- Dragging a card ----------
   let drag = null;
 
   document.addEventListener("pointerdown", function (e) {
     const c = e.target.closest && e.target.closest(".fc-card");
-    if (!c || c.classList.contains("fc-flyer") || e.target.closest("a") || e.button > 0) return;
+    if (!c || c.classList.contains("fc-flyer") || e.target.closest("a, button") || e.button > 0) return;
     drag = { card: c, x: e.clientX, y: e.clientY, dx: 0, moved: false, id: e.pointerId };
   });
 
@@ -328,11 +471,19 @@
   document.addEventListener("pointercancel", endDrag);
 
   // ---------- Buttons, keys and controls ----------
+  // A click outside the open panel only closes it (notes.js does that); note it here, in the
+  // capture phase, so the same click doesn't also flip the card underneath.
+  let closingPanel = false;
+  document.addEventListener("click", function (e) {
+    const p = document.getElementById("panel");
+    closingPanel = panelOpen() && !p.contains(e.target);
+  }, true);
+
   document.addEventListener("click", function (e) {
     const page = e.target.closest && e.target.closest(".fc-page");
-    if (!page) return;
+    if (!page || closingPanel) return;
     const c = e.target.closest(".fc-card");
-    if (c && !e.target.closest("a")) {
+    if (c && !e.target.closest("a, button")) {
       if (!c._dragged) flip(page);
       return;
     }
@@ -355,6 +506,7 @@
       case "got": mark(page, "got"); break;
       case "review": mark(page, "review"); break;
       case "undo": undo(page); break;
+      case "explain": explain(page, act); break;
       case "restart": restart(page); break;
       case "shuffle":
         act.setAttribute("aria-pressed", String(act.getAttribute("aria-pressed") !== "true"));
@@ -364,17 +516,22 @@
         pick(page, "[data-deck]", "review");
         restart(page);
         break;
+      case "studyall":
+        pick(page, "[data-deck]", "all");
+        restart(page);
+        break;
       case "reset":
         window.siteConfirm({
           title: "Clear all marks?",
-          text: "This removes every Got it and Review mark for this reading on this device. It can't be undone.",
+          text: "This removes every Got it and Review mark for this reading on this device, and starts every card's schedule over. It can't be undone.",
           ok: "Clear marks",
           cancel: "Keep them",
           danger: true,
         }).then(function (yes) {
           if (!yes || !document.contains(page)) return;
           save(page.dataset.store, {});
-          pick(page, "[data-deck]", "all");
+          save(page.dataset.srs, {});
+          pick(page, "[data-deck]", "due");
           restart(page);
         });
         break;
@@ -388,35 +545,58 @@
 
   document.addEventListener("keydown", function (e) {
     const page = document.querySelector(".fc-page.fc-ready");
-    if (!page || e.metaKey || e.ctrlKey || e.altKey || document.querySelector("dialog[open]")) return;
+    if (!page || e.metaKey || e.ctrlKey || e.altKey || document.querySelector("dialog[open]") || panelOpen()) return;
     const t = e.target;
     if (t.closest && t.closest("select, input, textarea, a")) return;
     const onButton = t.closest && t.closest("button");
     if (e.key === "ArrowRight") { e.preventDefault(); mark(page, "got"); }
     else if (e.key === "ArrowLeft") { e.preventDefault(); mark(page, "review"); }
+    else if (e.key === "e" || e.key === "E") {
+      const b = page.querySelector(".fc-explain");
+      if (!card(page).hidden && !b.hidden) { e.preventDefault(); explain(page, b); }
+    }
     else if ((e.key === " " || e.key === "Enter") && !onButton) { e.preventDefault(); flip(page); }
   });
 
-  // Progress line on an options-page card: "12 of 109 got it · 5 to review".
+  // Progress line on an options-page card: "12 of 109 got it · 5 to review · 30 due now".
   function progress() {
     document.querySelectorAll("[data-progress]").forEach(function (el) {
       const marks = load(el.dataset.progress);
-      let got = 0, review = 0;
+      const srs = el.dataset.srs ? load(el.dataset.srs) : {};
+      const now = Date.now();
+      let got = 0, review = 0, later = 0;
       Object.keys(marks).forEach(function (id) {
         if (marks[id] === "got") got++;
         else if (marks[id] === "review") review++;
       });
+      Object.keys(srs).forEach(function (id) { if (srs[id].d > now) later++; });
+      const due = Number(el.dataset.total) - later;
       el.hidden = !(got || review);
-      el.textContent = got + " of " + el.dataset.total + " got it" + (review ? " · " + review + " to review" : "");
+      el.textContent = got + " of " + el.dataset.total + " got it" + (review ? " · " + review + " to review" : "") +
+        (el.dataset.srs ? " · " + due + " due now" : "");
     });
+  }
+
+  // On the reading page, reached from a card's "In the reading": a button back to the deck.
+  // The deck itself was saved in sessionStorage, so it reopens on the same card.
+  function returnButton() {
+    if (new URLSearchParams(location.search).get("from") !== "flashcards") return;
+    if (document.querySelector(".fc-page") || document.querySelector(".fc-return")) return;
+    const a = document.createElement("a");
+    a.className = "fc-return";
+    a.href = location.pathname.replace(/[^/]+\/$/, "flashcard/");
+    a.innerHTML = '<span aria-hidden="true">←</span> Back to flashcards';
+    document.body.appendChild(a);
   }
 
   function setup() {
     document.querySelectorAll(".fc-page").forEach(function (page) {
       migrate(page);
       page.classList.add("fc-ready");
-      let s = getState(page);
-      // A link like flashcards/#part-2-2 opens the deck on that part (once per page visit).
+      // Priority: this page's own state (a Back/Forward restore), then the deck saved in this
+      // tab (coming back from the reading), then a fresh deck.
+      let s = getState(page) || savedDeck(page);
+      // A link like flashcard/#part-2-2 opens a fresh deck on that part (once per page visit).
       const hash = decodeURIComponent(location.hash.slice(1));
       const sel = page.querySelector(".fc-section");
       if (hash && page.dataset.hashUsed !== hash && Array.prototype.some.call(sel.options, function (o) { return o.value === hash; })) {
@@ -424,11 +604,16 @@
         sel.value = hash;
         s = null;
       }
-      if (s && s.order.every(function (id) { return document.getElementById(id); })) writeOpts(page, s.opts);
-      else s = build(page);
+      if (s && s.opts && s.order.every(function (id) { return document.getElementById(id); })) {
+        writeOpts(page, s.opts);
+        setState(page, s);
+      } else {
+        s = build(page);
+      }
       draw(page, s);
     });
     progress();
+    returnButton();
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", setup);

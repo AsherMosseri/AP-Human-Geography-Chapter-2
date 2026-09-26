@@ -65,7 +65,10 @@ answer linking to its heading in the guide (`reading/#id`). The guide ends each 
 link to that part's deck (`flashcard/#part-2-1`). Card ids are stable: marks are saved under
 them, so reword a card freely but don't rename its id. Each card is tagged `data-focus="ap"` (an idea an AP
 question could apply to a map, graph or scenario) or `"detail"` (the reading's stories, field notes
-and exact numbers); the deck can be filtered to either. Out-of-date numbers keep the book's figure and add
+and exact numbers); the deck can be filtered to either. `data-notes` lists the guide's note ids (first is the
+main one) that "Explain it" pulls from `reading/`; every card needs at least one. Marks, the
+spaced-repetition schedule (`srs:` key) and the deck in progress (sessionStorage) are all keyed by
+card id. Out-of-date numbers keep the book's figure and add
 an "Update" box; book errors get a short note saying which value to use on the quiz.
 
 **Apply it.** Every chart has an "Apply it" box and every key-concept note (`class="term key"`) has
